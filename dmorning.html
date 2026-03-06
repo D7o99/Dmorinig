@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دوائر | قائمة الطعام</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script type="module">
+        // ================== استيراد Firebase ==================
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyARoaXISEB8yiCmes_EmZLhb-8ZtbwOR-k",
+            authDomain: "dmorinig-f29d9.firebaseapp.com",
+            projectId: "dmorinig-f29d9",
+            storageBucket: "dmorinig-f29d9.firebasestorage.app",
+            messagingSenderId: "813644062004",
+            appId: "1:813644062004:web:e822278f6ee5f2f6f05961",
+            measurementId: "G-77LJ79TDS2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // ================== تحميل المنتجات ==================
+        async function loadProducts() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "products"));
+                const products = [];
+                querySnapshot.forEach((doc) => {
+                    products.push({ id: doc.id, ...doc.data() });
+                });
+
+                // ترتيب المنتجات من الأحدث
+                products.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+                
+                // عرض المنتجات في الأقسام
+                displayProducts(products);
+                
+            } catch (error) {
+                console.error("خطأ في تحميل المنتجات:", error);
+            }
+        }
+
+        // ================== عرض المنتجات ==================
+        function displayProducts(products) {
+            // تعريف الأقسام
+            const sections = {
+                sauces: document.getElementById('sauces-list'),
+                sandwich: document.getElementById('sandwich-list'),
+                circles: document.getElementById('circles-list'),
+                hummus: document.getElementById('hummus-list'),
+                drinks: document.getElementById('drinks-list'),
+                boxes: document.getElementById('boxes-list'),
+                specials: document.getElementById('specials-list')
+            };
+
+            // مسح المحتوى القديم
+            for (let key in sections) {
+                if (sections[key]) {
+                    sections[key].innerHTML = '';
+                }
+            }
+
+            // إضافة المنتجات لكل قسم
+            products.forEach(product => {
+                const section = sections[product.category];
+                if (section) {
+                    const productRow = document.createElement('div');
+                    productRow.className = 'product-row';
+                    
+                    // إضافة حدث النقر مباشرة بدلاً من onclick في HTML
+                    productRow.addEventListener('click', function() {
+                        openModal(product);
+                    });
+                    
+                    productRow.innerHTML = `
+                        <div class="product-left">
+                            <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/75/2b3393/ffffff?text=img';">
+                            <span class="product-name">${product.name}</span>
+                        </div>
+                        <div class="product-price">${product.price} ريال</div>
+                    `;
+                    
+                    section.appendChild(productRow);
+                }
+            });
+
+            // إظهار رسالة إذا كان القسم فارغاً
+            for (let key in sections) {
+                if (sections[key] && sections[key].children.length === 0) {
+                    sections[key].innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">لا توجد منتجات في هذا القسم</div>';
+                }
+            }
+        }
+
+        // تحميل المنتجات عند فتح الصفحة
+        window.addEventListener('DOMContentLoaded', loadProducts);
+        
+        // ================== دالة فتح المودال (عامة) ==================
+        window.openModal = function(product) {
+            console.log('فتح المودال:', product); // للتأكد من وصول البيانات
+            
+            document.getElementById('modalImg').src = product.image || 'https://via.placeholder.com/300';
+            document.getElementById('modalName').innerText = product.name || 'منتج';
+            document.getElementById('modalCategory').innerText = product.category || 'قسم';
+            document.getElementById('modalDesc').innerText = product.desc || 'وصف المنتج';
+            document.getElementById('modalPrice').innerText = (product.price || '0') + ' ريال';
+            document.getElementById('modalCalories').innerText = product.calories || '---';
+            document.getElementById('modalTime').innerText = product.time || '---';
+            
+            let message = encodeURIComponent(`مرحباً، أريد طلب ${product.name} - السعر: ${product.price} ريال`);
+            document.getElementById('modalWhatsapp').href = `https://wa.me/966595711777?text=${message}`;
+            
+            document.getElementById('productModal').classList.add('active');
+        };
+
+        // دالة إغلاق المودال
+        window.closeModal = function(event) {
+            if (event.target.classList.contains('modal-overlay') || event.target.closest('.modal-close')) {
+                document.getElementById('productModal').classList.remove('active');
+            }
+        };
+
+        // إغلاق المودال بزر ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('productModal').classList.remove('active');
+            }
+        });
+
+        // دالة التمرير للأقسام
+        window.goTo = function(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        };
+    </script>
+
+    <style>
+        :root {
+            --main: #2b3393;
+            --secondary: #f8c81c;
+            --light-bg: #f5f6fc;
+            --shadow-sm: 0 10px 25px rgba(0,0,0,0.08);
+            --shadow-hover: 0 20px 35px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: var(--light-bg);
+            scroll-behavior: smooth;
+        }
+
+        /* الهيدر الثابت */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background: #2b3393;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            z-index: 1000;
+            padding: 5px 5px;
+            border-bottom: 3px solid var(--secondary);
+            transition: var(--transition);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .logo-container img {
+            max-height: 60px;
+            width: auto;
+            display: inline-block;
+            filter: drop-shadow(0 4px 6px rgba(43, 51, 147, 0.2));
+            transition: transform 0.4s ease;
+        }
+
+        .logo-container img:hover {
+            transform: scale(1.05) rotate(1deg);
+        }
+
+        /* أزرار التصنيفات */
+        .categories {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 5px 0 5px 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--main) #fff;
+            justify-content: center;
+        }
+
+        .categories button {
+            border: none;
+            background: #fff;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 15px;
+            color: var(--main);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .categories button.active {
+            background: var(--main);
+            color: white;
+            box-shadow: 0 8px 16px rgba(43, 51, 147, 0.3);
+        }
+
+        .categories button:hover {
+            background: #dde0ff;
+            transform: translateY(-2px);
+        }
+
+        /* الحاوية الرئيسية */
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* العنوان الرئيسي */
+        .header {
+            text-align: center;
+            margin: 30px 0 30px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .badge {
+            color: var(--main);
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--main);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .line {
+            width: 80px;
+            height: 4px;
+            background: var(--secondary);
+            margin: 12px auto;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            100% { left: 100%; }
+        }
+
+        /* بطاقة المنتج الرئيسي */
+        .product-card {
+            background: #fff;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 50px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .product-image {
+            background: linear-gradient(145deg, #eef0ff, #ffffff);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .product-image img {
+            width: 240px;
+            max-width: 100%;
+            filter: drop-shadow(0 10px 15px rgba(43, 51, 147, 0.2));
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+        .product-info {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .product-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--main);
+        }
+
+        .product-desc {
+            margin-top: 10px;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .price {
+            color: var(--main);
+            font-weight: 700;
+            margin-top: 10px;
+            font-size: 1.4rem;
+        }
+
+        .order-btn {
+            margin-top: 20px;
+            display: inline-block;
+            background: var(--main);
+            color: #fff;
+            padding: 14px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: var(--transition);
+            box-shadow: 0 8px 16px rgba(43, 51, 147, 0.3);
+            border: 2px solid transparent;
+        }
+
+        .order-btn:hover {
+            background: #1f256e;
+            transform: scale(1.03);
+        }
+
+        .order-btn::before {
+            content: "\f232";
+            font-family: "Font Awesome 6 Brands";
+            margin-left: 8px;
+            font-size: 1.2rem;
+        }
+
+        /* عناوين الأقسام */
+        .section-heading {
+            font-size: 26px;
+            color: var(--main);
+            margin: 40px 0 20px;
+            padding-right: 15px;
+            border-right: 6px solid var(--secondary);
+            transition: var(--transition);
+        }
+
+        .section-heading:hover {
+            padding-right: 25px;
+            color: #1f256e;
+        }
+
+        .scroll-margin {
+            scroll-margin-top: 130px;
+        }
+
+        /* قائمة المنتجات */
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .product-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            border: 1px solid rgba(43, 51, 147, 0.05);
+            cursor: pointer;
+        }
+
+        .product-row:hover {
+            transform: translateX(-5px) scale(1.01);
+            box-shadow: 0 15px 30px rgba(43, 51, 147, 0.1);
+            background: #ffffff;
+            border-color: var(--secondary);
+        }
+
+        .product-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .product-left img {
+            width: 75px;
+            height: 75px;
+            border-radius: 18px;
+            background: #eef0ff;
+            object-fit: cover;
+            padding: 6px;
+            transition: var(--transition);
+        }
+
+        .product-row:hover .product-left img {
+            transform: rotate(3deg) scale(1.05);
+        }
+
+        .product-name {
+            font-weight: 700;
+            color: var(--main);
+            font-size: 1.2rem;
+        }
+
+        .product-price {
+            color: #2b3393;
+            font-weight: 800;
+            font-size: 1.3rem;
+            background: #f0f2ff;
+            padding: 5px 15px;
+            border-radius: 40px;
+            transition: var(--transition);
+        }
+
+        .product-row:hover .product-price {
+            background: var(--secondary);
+            color: var(--main);
+        }
+
+        /* المودال */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255,255,255,0.9);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--main);
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--secondary);
+            transform: rotate(90deg);
+        }
+
+        .modal-image {
+            background: #eef0ff;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .modal-image img {
+            width: 180px;
+            max-width: 100%;
+            filter: drop-shadow(0 10px 15px rgba(43, 51, 147, 0.2));
+        }
+
+        .modal-details {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .modal-details h2 {
+            color: var(--main);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .modal-category {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--main);
+            padding: 5px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .modal-description {
+            color: #666;
+            margin: 20px 0;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        .modal-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--main);
+            margin: 15px 0;
+        }
+
+        .modal-whatsapp {
+            display: inline-block;
+            background: #25D366;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            transition: var(--transition);
+            box-shadow: 0 8px 16px rgba(37, 211, 102, 0.3);
+            width: 100%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .modal-whatsapp:hover {
+            background: #128C7E;
+            transform: scale(1.03);
+        }
+
+        .modal-whatsapp i {
+            margin-left: 8px;
+        }
+
+        .modal-meta {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 15px 0 5px;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .modal-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .modal-meta i {
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .branch-closed {
+            background: #ffeeee;
+            color: #d33;
+            padding: 8px;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .social-section {
+            background: white;
+            border-radius: 50px 50px 20px 20px;
+            padding: 35px 20px 30px;
+            margin: 50px 0 30px;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+
+        .social-title {
+            color: var(--main);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: #f0f2ff;
+            color: var(--main);
+            font-size: 2rem;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-icon:hover {
+            transform: translateY(-8px) scale(1.1);
+            color: white;
+        }
+
+        .social-icon:nth-child(1):hover { background: #25D366; }
+        .social-icon:nth-child(2):hover { background: #E4405F; }
+        .social-icon:nth-child(3):hover { background: #000000; }
+        .social-icon:nth-child(4):hover { background: #FFFC00; color: #000; }
+
+        .map-container {
+            margin: 30px auto 40px;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 350px;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الهيدر الثابت -->
+    <div class="sticky-header">
+        <div class="logo-container">
+            <img src="https://i.ibb.co/qMCd3wgR/IMG-6048.jpg" alt="لوجو" onerror="this.src='https://via.placeholder.com/150x55/2b3393/ffffff?text=Logo';">
+        </div>
+        <div class="categories">
+            <button onclick="goTo('offer')" class="active">العروض</button>
+            <button onclick="goTo('sandwich')">الساندويتش</button>
+            <button onclick="goTo('circles')">الدوائر</button>
+            <button onclick="goTo('hummus')">الحمسات</button>
+            <button onclick="goTo('drinks')">المشروبات</button>
+            <button onclick="goTo('boxes')">البوكسات</button>
+
+            <button onclick="goTo('sauces')">الصوصات</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- العنوان -->
+        <div class="header">
+            <div class="badge">✨ أصنافنا الرمضانية ✨</div>
+            <div class="title">طعم السعادة .. على سفرتك ويكمل جمعتك</div>
+            <div class="line"></div>
+        </div>
+
+        <!-- المنتج الرئيسي -->
+        <div class="product-card" onclick="openModal({
+            name: 'بوكس رمضان دوائر ميني',
+            category: 'بوكس رمضاني',
+            image: 'https://l.top4top.io/p_3716sv58p0.png',
+            desc: '4 دوائر فلافل ميني · 4 دوائر حلوم ميني · 4 دوائر دجاج ميني · 4 دوائر تونه ميني',
+            price: '33.15',
+            calories: '580 سعرة',
+            time: '14 دقيقة'
+        })">
+            <div class="product-image">
+                <img src="https://l.top4top.io/p_3716sv58p0.png" alt="بوكس رمضان">
+            </div>
+            <div class="product-info">
+                <div id="offer" class="product-title">بوكس رمضان دوائر ميني</div>
+                <div class="product-desc">4 دوائر فلافل ميني · 4 دوائر حلوم ميني · 4 دوائر دجاج ميني · 4 دوائر تونه ميني</div>
+                <div class="price">33.15 ريال</div>
+                <a class="order-btn" href="https://wa.me/966595711777" target="_blank" onclick="event.stopPropagation();"> اطلب عبر الواتساب</a>
+            </div>
+        </div>
+
+
+        <!-- قسم الساندويتش -->
+        <h2 id="sandwich" class="section-heading scroll-margin"> الساندويتش</h2>
+        <div class="product-list" id="sandwich-list"></div>
+
+        <!-- قسم الدوائر -->
+        <h2 id="circles" class="section-heading scroll-margin"> الدوائر</h2>
+        <div class="product-list" id="circles-list"></div>
+
+        <!-- قسم الحمسات -->
+        <h2 id="hummus" class="section-heading scroll-margin"> الحمسات</h2>
+        <div class="product-list" id="hummus-list"></div>
+
+        <!-- قسم المشروبات -->
+        <h2 id="drinks" class="section-heading scroll-margin"> المشروبات</h2>
+        <div class="product-list" id="drinks-list"></div>
+
+        <!-- قسم البوكسات -->
+        <h2 id="boxes" class="section-heading scroll-margin"> البوكسات</h2>
+        <div class="product-list" id="boxes-list"></div>
+
+        <!-- قسم الصوصات -->
+        <h2 id="sauces" class="section-heading scroll-margin"> الصوصات</h2>
+        <div class="product-list" id="sauces-list"></div>
+
+        <!-- التواصل الاجتماعي -->
+        <div class="social-section">
+            <div class="social-title">تواصل معنا</div>
+            <div class="social-icons">
+                <a href="https://wa.me/966595711777" target="_blank" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+                <a href="#" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" target="_blank" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                <a href="#" target="_blank" class="social-icon"><i class="fab fa-snapchat-ghost"></i></a>
+            </div>
+        </div>
+
+        <!-- خريطة قوقل ماب -->
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119718.31841801458!2d42.444841!3d18.215575!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f5e1b5b5b5b5b%3A0x5b5b5b5b5b5b5b5b!2z2KfZhNmF2LnZh9ix2KfYqiDYp9mE2K_ZgtmH2KfYjCDYp9mE2K_ZitmH2Iwg2KfZhNiz2YbYp9ix2KfYqiDYp9mE2K_Zg9mK2KfYqg!5e0!3m2!1sar!2ssa!4v1644323456789!5m2!1sar!2ssa" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="https://maps.app.goo.gl/m4y1acEZp7T1KfdL6?g_st=ic" target="_blank" style="background: var(--main); color: white; padding: 10px 25px; border-radius: 40px; text-decoration: none;">📍 افتح الخريطة مباشرة</a>
+        </div>
+    </div>
+
+    <!-- المودال -->
+    <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-close" onclick="closeModal(event)"><i class="fas fa-times"></i></div>
+            <div class="modal-image" id="modalImage">
+                <img src="" alt="product" id="modalImg">
+            </div>
+            <div class="modal-details">
+                <span class="modal-category" id="modalCategory"></span>
+                <h2 id="modalName"></h2>
+                <div class="modal-meta">
+                    <span><i class="fas fa-fire"></i> <span id="modalCalories"></span></span>
+                    <span><i class="fas fa-clock"></i> <span id="modalTime"></span></span>
+                </div>
+                <div class="modal-description" id="modalDesc"></div>
+                <div class="modal-price" id="modalPrice"></div>
+             
+                <a href="https://wa.me/966595711777" target="_blank" class="modal-whatsapp" id="modalWhatsapp"><i class="fab fa-whatsapp"></i> اطلب عبر الواتساب</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
