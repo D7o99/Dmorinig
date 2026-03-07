@@ -340,7 +340,7 @@
             color: var(--main);
         }
 
-        #file-input, #editFileInput {
+        #file-input, #editFileInput, #offerFileInput {
             display: none;
         }
 
@@ -367,6 +367,12 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+        }
+
+        .btn-save.small {
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            width: auto;
         }
 
         /* جدول المنتجات مع خاصية الإظهار/الإخفاء */
@@ -672,7 +678,7 @@
         import { 
             getFirestore, 
             collection, addDoc, getDocs, deleteDoc, doc, updateDoc,
-            query, where, orderBy, limit 
+            query, where, orderBy, limit, setDoc 
         } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -691,6 +697,20 @@
         // ================== المتغيرات العامة ==================
         let products = [];
         let categories = [];
+        let offerSettings = {
+            visible: true,
+            badge: '✨ أصنافنا الرمضانية ✨',
+            title: 'طعم السعادة .. على سفرتك ويكمل جمعتك',
+            product: {
+                name: 'بوكس رمضان دوائر ميني',
+                price: '33.15',
+                image: 'https://l.top4top.io/p_3716sv58p0.png',
+                calories: '580 سعرة',
+                time: '14 دقيقة',
+                desc: '4 دوائر فلافل ميني · 4 دوائر حلوم ميني · 4 دوائر دجاج ميني · 4 دوائر تونه ميني',
+                whatsapp: '966595711777'
+            }
+        };
 
         // الأقسام الافتراضية (الثابتة)
         const defaultCategories = [
@@ -706,6 +726,110 @@
         // متغيرات الفلترة
         let currentFilterCategory = 'all';
         let currentFilterStatus = 'all';
+
+        // ================== تحميل إعدادات العروض ==================
+        async function loadOfferSettings() {
+            try {
+                const docRef = doc(db, "settings", "offer");
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    offerSettings = { ...offerSettings, ...docSnap.data() };
+                }
+                
+                // تحديث النموذج بالقيم المحملة
+                document.getElementById('offerVisible').checked = offerSettings.visible;
+                document.getElementById('offerBadge').value = offerSettings.badge;
+                document.getElementById('offerTitle').value = offerSettings.title;
+                document.getElementById('offerProductName').value = offerSettings.product.name;
+                document.getElementById('offerProductPrice').value = offerSettings.product.price;
+                document.getElementById('offerImageUrl').value = offerSettings.product.image;
+                document.getElementById('offerCalories').value = offerSettings.product.calories;
+                document.getElementById('offerTime').value = offerSettings.product.time;
+                document.getElementById('offerDesc').value = offerSettings.product.desc;
+                document.getElementById('offerWhatsapp').value = offerSettings.product.whatsapp;
+                
+            } catch (error) {
+                console.error('خطأ في تحميل إعدادات العروض:', error);
+            }
+        }
+
+        // ================== حفظ إعدادات العروض ==================
+        async function saveOfferSettings() {
+            try {
+                const offerData = {
+                    visible: document.getElementById('offerVisible').checked,
+                    badge: document.getElementById('offerBadge').value,
+                    title: document.getElementById('offerTitle').value,
+                    product: {
+                        name: document.getElementById('offerProductName').value,
+                        price: document.getElementById('offerProductPrice').value,
+                        image: document.getElementById('offerFinalImageData').value || document.getElementById('offerImageUrl').value,
+                        calories: document.getElementById('offerCalories').value,
+                        time: document.getElementById('offerTime').value,
+                        desc: document.getElementById('offerDesc').value,
+                        whatsapp: document.getElementById('offerWhatsapp').value
+                    },
+                    updatedAt: new Date().toISOString()
+                };
+                
+                await setDoc(doc(db, "settings", "offer"), offerData);
+                offerSettings = offerData;
+                
+                showToast('✅ تم حفظ إعدادات العروض بنجاح');
+                
+            } catch (error) {
+                console.error('خطأ في حفظ إعدادات العروض:', error);
+                showToast('❌ فشل حفظ الإعدادات');
+            }
+        }
+
+        // ================== معالجة الصور في العروض ==================
+        function setupOfferImageHandlers() {
+            const urlOptionBtn = document.getElementById('offerUrlOptionBtn');
+            const fileOptionBtn = document.getElementById('offerFileOptionBtn');
+            const urlInputGroup = document.getElementById('offerUrlInputGroup');
+            const fileInputGroup = document.getElementById('offerFileInputGroup');
+            const imageUrl = document.getElementById('offerImageUrl');
+            const fileInput = document.getElementById('offerFileInput');
+            const imagePreview = document.getElementById('offerImagePreview');
+            const finalImageData = document.getElementById('offerFinalImageData');
+
+            if (urlOptionBtn) {
+                urlOptionBtn.addEventListener('click', function() {
+                    urlInputGroup.style.display = 'block';
+                    fileInputGroup.style.display = 'none';
+                    finalImageData.value = imageUrl.value;
+                });
+            }
+
+            if (fileOptionBtn) {
+                fileOptionBtn.addEventListener('click', function() {
+                    urlInputGroup.style.display = 'none';
+                    fileInputGroup.style.display = 'block';
+                    finalImageData.value = '';
+                });
+            }
+
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        if (file.size > 2 * 1024 * 1024) {
+                            alert('حجم الصورة كبير جداً. الحد الأقصى 2 ميجابايت.');
+                            return;
+                        }
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            imagePreview.src = ev.target.result;
+                            imagePreview.style.display = 'block';
+                            finalImageData.value = ev.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        }
 
         // ================== تحميل الأقسام من Firebase ==================
         async function loadCategories() {
@@ -1385,6 +1509,8 @@
                         return;
                     }
 
+                    const status = document.querySelector('input[name="productStatus"]:checked')?.value || 'active';
+
                     const productData = {
                         name, 
                         price, 
@@ -1393,7 +1519,7 @@
                         time: document.getElementById('productTime')?.value.trim() || '---',
                         category,
                         desc: document.getElementById('productDesc')?.value.trim() || 'وصف غير متوفر',
-                        status: 'active', // المنتج الجديد يظهر تلقائياً
+                        status: status,
                         createdAt: new Date().toISOString()
                     };
 
@@ -1471,9 +1597,21 @@
             }
         });
 
+        // ================== معالجة نموذج حفظ العروض ==================
+        document.addEventListener('DOMContentLoaded', function() {
+            const saveBtn = document.getElementById('saveOfferBtn');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', saveOfferSettings);
+            }
+            
+            // تجهيز معالجات الصور
+            setupOfferImageHandlers();
+        });
+
         // تحميل البيانات
         loadCategories();
         loadProducts();
+        loadOfferSettings();
     </script>
 </head>
 <body>
@@ -1487,6 +1625,10 @@
             <div class="menu-item active" onclick="switchTab('dashboard-tab', this)">
                 <i class="fas fa-chart-pie"></i>
                 <span>لوحة المعلومات</span>
+            </div>
+            <div class="menu-item" onclick="switchTab('offers-tab', this)">
+                <i class="fas fa-tag"></i>
+                <span>العروض</span>
             </div>
             <div class="menu-item" onclick="switchTab('add-product-tab', this)">
                 <i class="fas fa-plus-circle"></i>
@@ -1543,6 +1685,102 @@
             </div>
         </div>
 
+        <!-- تبويب: العروض -->
+        <div id="offers-tab" class="tab-content">
+            <div class="content-card">
+                <h2 style="color: var(--main); margin-bottom: 15px; font-size: 1.3rem;">
+                    <i class="fas fa-tag" style="margin-left: 8px;"></i>التحكم في العرض الرئيسي
+                </h2>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="offerVisible" checked> 
+                        إظهار قسم العروض في الصفحة الرئيسية
+                    </label>
+                </div>
+                
+                <div style="background: #f0f2ff; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                    <h3 style="color: var(--main); margin-bottom: 15px;">✨ العنوان الرئيسي</h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>الشارة (النص الصغير)</label>
+                            <input type="text" id="offerBadge" value="✨ أصنافنا الرمضانية ✨">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>العنوان الرئيسي</label>
+                            <input type="text" id="offerTitle" value="طعم السعادة .. على سفرتك ويكمل جمعتك">
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #f0f2ff; padding: 20px; border-radius: 15px;">
+                    <h3 style="color: var(--main); margin-bottom: 15px;">📦 المنتج المميز</h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>اسم المنتج</label>
+                            <input type="text" id="offerProductName" value="بوكس رمضان دوائر ميني">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>السعر (ريال)</label>
+                            <input type="number" id="offerProductPrice" value="33.15" step="0.01">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>صورة المنتج</label>
+                            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <button type="button" id="offerUrlOptionBtn" class="btn-save small" style="background: var(--main);">رابط URL</button>
+                                <button type="button" id="offerFileOptionBtn" class="btn-save small" style="background: #666;">رفع ملف</button>
+                            </div>
+                            
+                            <div id="offerUrlInputGroup">
+                                <input type="url" id="offerImageUrl" value="https://l.top4top.io/p_3716sv58p0.png">
+                            </div>
+                            
+                            <div id="offerFileInputGroup" style="display: none;">
+                                <div class="file-upload-area" onclick="document.getElementById('offerFileInput').click()">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>اختر صورة للعرض</p>
+                                    <small>حد أقصى 2 ميجابايت</small>
+                                </div>
+                                <input type="file" id="offerFileInput" accept="image/*">
+                                <img id="offerImagePreview" class="image-preview" alt="معاينة">
+                            </div>
+                            <input type="hidden" id="offerFinalImageData">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>السعرات الحرارية</label>
+                            <input type="text" id="offerCalories" value="580 سعرة">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>وقت التجهيز</label>
+                            <input type="text" id="offerTime" value="14 دقيقة">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>وصف المنتج</label>
+                        <textarea id="offerDesc" rows="3">4 دوائر فلافل ميني · 4 دوائر حلوم ميني · 4 دوائر دجاج ميني · 4 دوائر تونه ميني</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>رابط الواتساب</label>
+                        <input type="text" id="offerWhatsapp" value="966595711777">
+                        <small style="color: #666;">رقم الواتساب بدون الرمز +</small>
+                    </div>
+                    
+                    <button class="btn-save" id="saveOfferBtn" style="margin-top: 10px;">
+                        <i class="fas fa-save"></i> حفظ إعدادات العرض
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- تبويب: إضافة منتج -->
         <div id="add-product-tab" class="tab-content">
             <div class="stats-grid">
@@ -1582,8 +1820,8 @@
                         <div class="form-group">
                             <label>صورة المنتج <span style="color: red;">*</span></label>
                             <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                                <button type="button" id="urlOptionBtn" class="btn-save" style="padding: 8px; font-size: 0.85rem;">رابط URL</button>
-                                <button type="button" id="fileOptionBtn" class="btn-save" style="background: #666; padding: 8px; font-size: 0.85rem;">رفع ملف</button>
+                                <button type="button" id="urlOptionBtn" class="btn-save small" style="background: var(--main);">رابط URL</button>
+                                <button type="button" id="fileOptionBtn" class="btn-save small" style="background: #666;">رفع ملف</button>
                             </div>
                             
                             <div id="urlInputGroup">
@@ -1623,19 +1861,18 @@
                     <div class="form-group">
                         <label>وصف قصير</label>
                         <textarea id="productDesc" rows="2" placeholder="وصف مختصر..."></textarea>
+                    </div>
 
-<div class="form-group">
-    <label>حالة المنتج</label>
-    <div class="status-toggle">
-        <label>
-            <input type="radio" name="productStatus" value="active" checked> ظاهر
-        </label>
-        <label>
-            <input type="radio" name="productStatus" value="inactive"> مخفي
-        </label>
-    </div>
-</div>
-
+                    <div class="form-group">
+                        <label>حالة المنتج</label>
+                        <div class="status-toggle">
+                            <label>
+                                <input type="radio" name="productStatus" value="active" checked> ظاهر
+                            </label>
+                            <label>
+                                <input type="radio" name="productStatus" value="inactive"> مخفي
+                            </label>
+                        </div>
                     </div>
                     
                     <button type="submit" class="btn-save"><i class="fas fa-save"></i> حفظ المنتج</button>
@@ -1826,8 +2063,8 @@
                 <div class="form-group">
                     <label>صورة المنتج</label>
                     <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <button type="button" id="editUrlOptionBtn" class="btn-save" style="padding: 8px; font-size: 0.85rem;">تغيير عبر رابط</button>
-                        <button type="button" id="editFileOptionBtn" class="btn-save" style="background: #666; padding: 8px; font-size: 0.85rem;">رفع ملف جديد</button>
+                        <button type="button" id="editUrlOptionBtn" class="btn-save small" style="background: var(--main);">تغيير عبر رابط</button>
+                        <button type="button" id="editFileOptionBtn" class="btn-save small" style="background: #666;">رفع ملف جديد</button>
                     </div>
                     
                     <div id="editUrlInputGroup">
