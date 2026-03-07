@@ -678,7 +678,7 @@
         import { 
             getFirestore, 
             collection, addDoc, getDocs, deleteDoc, doc, updateDoc,
-            query, where, orderBy, limit, setDoc 
+            query, where, orderBy, limit, setDoc, getDoc 
         } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -738,16 +738,35 @@
                 }
                 
                 // تحديث النموذج بالقيم المحملة
-                document.getElementById('offerVisible').checked = offerSettings.visible;
-                document.getElementById('offerBadge').value = offerSettings.badge;
-                document.getElementById('offerTitle').value = offerSettings.title;
-                document.getElementById('offerProductName').value = offerSettings.product.name;
-                document.getElementById('offerProductPrice').value = offerSettings.product.price;
-                document.getElementById('offerImageUrl').value = offerSettings.product.image;
-                document.getElementById('offerCalories').value = offerSettings.product.calories;
-                document.getElementById('offerTime').value = offerSettings.product.time;
-                document.getElementById('offerDesc').value = offerSettings.product.desc;
-                document.getElementById('offerWhatsapp').value = offerSettings.product.whatsapp;
+                const visibleCheckbox = document.getElementById('offerVisible');
+                if (visibleCheckbox) visibleCheckbox.checked = offerSettings.visible;
+                
+                const badgeInput = document.getElementById('offerBadge');
+                if (badgeInput) badgeInput.value = offerSettings.badge;
+                
+                const titleInput = document.getElementById('offerTitle');
+                if (titleInput) titleInput.value = offerSettings.title;
+                
+                const nameInput = document.getElementById('offerProductName');
+                if (nameInput) nameInput.value = offerSettings.product.name;
+                
+                const priceInput = document.getElementById('offerProductPrice');
+                if (priceInput) priceInput.value = offerSettings.product.price;
+                
+                const imageUrlInput = document.getElementById('offerImageUrl');
+                if (imageUrlInput) imageUrlInput.value = offerSettings.product.image;
+                
+                const caloriesInput = document.getElementById('offerCalories');
+                if (caloriesInput) caloriesInput.value = offerSettings.product.calories;
+                
+                const timeInput = document.getElementById('offerTime');
+                if (timeInput) timeInput.value = offerSettings.product.time;
+                
+                const descInput = document.getElementById('offerDesc');
+                if (descInput) descInput.value = offerSettings.product.desc;
+                
+                const whatsappInput = document.getElementById('offerWhatsapp');
+                if (whatsappInput) whatsappInput.value = offerSettings.product.whatsapp;
                 
             } catch (error) {
                 console.error('خطأ في تحميل إعدادات العروض:', error);
@@ -757,24 +776,52 @@
         // ================== حفظ إعدادات العروض ==================
         async function saveOfferSettings() {
             try {
+                // التحقق من وجود العناصر
+                const visibleCheckbox = document.getElementById('offerVisible');
+                const badgeInput = document.getElementById('offerBadge');
+                const titleInput = document.getElementById('offerTitle');
+                const nameInput = document.getElementById('offerProductName');
+                const priceInput = document.getElementById('offerProductPrice');
+                const imageUrlInput = document.getElementById('offerImageUrl');
+                const caloriesInput = document.getElementById('offerCalories');
+                const timeInput = document.getElementById('offerTime');
+                const descInput = document.getElementById('offerDesc');
+                const whatsappInput = document.getElementById('offerWhatsapp');
+                
+                if (!visibleCheckbox || !badgeInput || !titleInput) {
+                    alert('❌ بعض الحقول غير موجودة');
+                    return;
+                }
+                
+                // تحديد مصدر الصورة
+                let imageUrl = document.getElementById('offerFinalImageData')?.value || imageUrlInput.value;
+                
+                if (!imageUrl) {
+                    alert('❌ الرجاء إدخال صورة المنتج');
+                    return;
+                }
+                
                 const offerData = {
-                    visible: document.getElementById('offerVisible').checked,
-                    badge: document.getElementById('offerBadge').value,
-                    title: document.getElementById('offerTitle').value,
+                    visible: visibleCheckbox.checked,
+                    badge: badgeInput.value,
+                    title: titleInput.value,
                     product: {
-                        name: document.getElementById('offerProductName').value,
-                        price: document.getElementById('offerProductPrice').value,
-                        image: document.getElementById('offerFinalImageData').value || document.getElementById('offerImageUrl').value,
-                        calories: document.getElementById('offerCalories').value,
-                        time: document.getElementById('offerTime').value,
-                        desc: document.getElementById('offerDesc').value,
-                        whatsapp: document.getElementById('offerWhatsapp').value
+                        name: nameInput.value,
+                        price: priceInput.value,
+                        image: imageUrl,
+                        calories: caloriesInput.value,
+                        time: timeInput.value,
+                        desc: descInput.value,
+                        whatsapp: whatsappInput.value
                     },
                     updatedAt: new Date().toISOString()
                 };
                 
                 await setDoc(doc(db, "settings", "offer"), offerData);
                 offerSettings = offerData;
+                
+                // حفظ في localStorage لتتمكن الصفحة الرئيسية من قراءته
+                localStorage.setItem('offerSettings', JSON.stringify(offerData));
                 
                 showToast('✅ تم حفظ إعدادات العروض بنجاح');
                 
