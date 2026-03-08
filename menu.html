@@ -25,11 +25,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ================== متغيرات السلايدر ==================
-        let currentSlide = 0;
-        let totalSlides = 0;
-        let autoSlideInterval;
-
         // ================== مؤشر التحميل ==================
         function showLoading() {
             const sections = ['sandwich-list', 'circles-list', 'hummus-list', 'drinks-list', 'boxes-list', 'sauces-list'];
@@ -69,8 +64,7 @@
                             calories: '580 سعرة',
                             time: '14 دقيقة',
                             desc: '4 دوائر فلافل ميني · 4 دوائر حلوم ميني · 4 دوائر دجاج ميني · 4 دوائر تونه ميني',
-                            whatsapp: '966595711777',
-                            visible: true
+                            whatsapp: '966595711777'
                         }
                     ]
                 };
@@ -99,7 +93,7 @@
                 if (badgeEl) badgeEl.textContent = offerSettings.badge || '✨ عروضنا المميزة ✨';
                 if (titleEl) titleEl.textContent = offerSettings.title || 'أفضل العروض لفترة محدودة';
 
-                // عرض المنتجات الرئيسية في السلايدر
+                // عرض المنتجات الرئيسية
                 displayFeaturedProducts(offerSettings.featuredProducts || []);
                 
             } catch (error) {
@@ -108,173 +102,46 @@
             }
         }
 
-        // ================== عرض المنتجات الرئيسية في السلايدر ==================
+        // ================== عرض المنتجات الرئيسية (العروض) ==================
         function displayFeaturedProducts(featuredProducts) {
-            const sliderWrapper = document.getElementById('featured-slider-wrapper');
-            const dotsContainer = document.getElementById('sliderDots');
+            const container = document.getElementById('featured-products-container');
+            if (!container) return;
             
-            if (!sliderWrapper) return;
+            container.innerHTML = '';
             
-            sliderWrapper.innerHTML = '';
-            dotsContainer.innerHTML = '';
-            
-            // منتج افتراضي إذا لم تكن هناك منتجات
-            const defaultProduct = {
-                name: 'بوكس رمضان دوائر ميني',
-                price: '33.15',
-                image: 'https://l.top4top.io/p_3716sv58p0.png',
-                calories: '580 سعرة',
-                time: '14 دقيقة',
-                desc: '4 دوائر فلافل ميني · 4 دوائر حلوم ميني · 4 دوائر دجاج ميني · 4 دوائر تونه ميني',
-                whatsapp: '966595711777',
-                visible: true
-            };
-            
-            let productsToShow = featuredProducts;
-            if (!productsToShow || productsToShow.length === 0) {
-                productsToShow = [defaultProduct];
+            if (!featuredProducts || featuredProducts.length === 0) {
+                // عرض منتج افتراضي إذا لم تكن هناك عروض
+                const defaultProduct = {
+                    name: 'بوكس رمضان دوائر ميني',
+                    price: '33.15',
+                    image: 'https://l.top4top.io/p_3716sv58p0.png',
+                    calories: '580 سعرة',
+                    time: '14 دقيقة',
+                    desc: '4 دوائر فلافل ميني · 4 دوائر حلوم ميني · 4 دوائر دجاج ميني · 4 دوائر تونه ميني',
+                    whatsapp: '966595711777'
+                };
+                featuredProducts = [defaultProduct];
             }
             
-            // تصفية المنتجات المرئية فقط
-            const visibleProducts = productsToShow.filter(p => p.visible !== false);
-            
-            if (visibleProducts.length === 0) {
-                visibleProducts.push(defaultProduct);
-            }
-            
-            totalSlides = visibleProducts.length;
-            
-            visibleProducts.forEach((product, index) => {
-                // إضافة الشريحة
-                const slide = document.createElement('div');
-                slide.className = 'featured-slide';
+            featuredProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.onclick = () => openModal(product);
                 
-                slide.innerHTML = `
-                    <div class="featured-product-card" onclick='openModal(${JSON.stringify(product).replace(/'/g, "\\'")})'>
-                        <div class="featured-product-image">
-                            <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/200/2b3393/ffffff?text=صورة';">
-                        </div>
-                        <div class="featured-product-info">
-                            <div class="featured-product-title">${product.name}</div>
-                            <div class="featured-product-desc">${product.desc || ''}</div>
-                            <div class="featured-price">${product.price} ريال</div>
-                            <a class="featured-order-btn" href="https://wa.me/${product.whatsapp || '966595711777'}" target="_blank" onclick="event.stopPropagation();"> اطلب عبر الواتساب</a>
-                        </div>
+                productCard.innerHTML = `
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/200/2b3393/ffffff?text=صورة';">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title">${product.name}</div>
+                        <div class="product-desc">${product.desc || ''}</div>
+                        <div class="price">${product.price} ريال</div>
+                        <a class="order-btn" href="https://wa.me/${product.whatsapp || '966595711777'}" target="_blank" onclick="event.stopPropagation();"> اطلب عبر الواتساب</a>
                     </div>
                 `;
                 
-                sliderWrapper.appendChild(slide);
-                
-                // إضافة نقاط المؤشر
-                const dot = document.createElement('span');
-                dot.className = `featured-dot ${index === 0 ? 'active' : ''}`;
-                dot.setAttribute('data-index', index);
-                dot.onclick = () => goToSlide(index);
-                dotsContainer.appendChild(dot);
+                container.appendChild(productCard);
             });
-            
-            // تهيئة السلايدر
-            initSlider();
-        }
-
-        // ================== دوال السلايدر ==================
-        function initSlider() {
-            if (totalSlides <= 1) {
-                // إخفاء أزرار التنقل إذا كان هناك شريحة واحدة فقط
-                const prevBtn = document.querySelector('.featured-slider-btn-prev');
-                const nextBtn = document.querySelector('.featured-slider-btn-next');
-                if (prevBtn) prevBtn.style.display = 'none';
-                if (nextBtn) nextBtn.style.display = 'none';
-                return;
-            }
-            
-            // إضافة مستمعي الأحداث للأزرار
-            const prevBtn = document.querySelector('.featured-slider-btn-prev');
-            const nextBtn = document.querySelector('.featured-slider-btn-next');
-            const sliderWrapper = document.getElementById('featured-slider-wrapper');
-            
-            if (prevBtn) prevBtn.addEventListener('click', prevSlide);
-            if (nextBtn) nextBtn.addEventListener('click', nextSlide);
-            
-            // بدء التشغيل التلقائي
-            startAutoSlide();
-            
-            // إيقاف التشغيل التلقائي عند التحويم
-            if (sliderWrapper) {
-                sliderWrapper.addEventListener('mouseenter', stopAutoSlide);
-                sliderWrapper.addEventListener('mouseleave', startAutoSlide);
-            }
-            
-            // دعم اللمس للجوال
-            let touchStartX = 0;
-            if (sliderWrapper) {
-                sliderWrapper.addEventListener('touchstart', (e) => {
-                    touchStartX = e.changedTouches[0].screenX;
-                    stopAutoSlide();
-                });
-                
-                sliderWrapper.addEventListener('touchend', (e) => {
-                    const touchEndX = e.changedTouches[0].screenX;
-                    const diff = touchStartX - touchEndX;
-                    
-                    if (Math.abs(diff) > 50) {
-                        if (diff > 0) {
-                            nextSlide();
-                        } else {
-                            prevSlide();
-                        }
-                    }
-                    startAutoSlide();
-                });
-            }
-        }
-
-        function goToSlide(index) {
-            const sliderWrapper = document.getElementById('featured-slider-wrapper');
-            const dots = document.querySelectorAll('.featured-dot');
-            
-            if (index < 0) index = 0;
-            if (index >= totalSlides) index = totalSlides - 1;
-            
-            currentSlide = index;
-            if (sliderWrapper) {
-                sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
-            }
-            
-            // تحديث النقاط
-            dots.forEach((dot, i) => {
-                if (i === currentSlide) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-        }
-
-        function nextSlide() {
-            if (totalSlides <= 1) return;
-            currentSlide = (currentSlide + 1) % totalSlides;
-            goToSlide(currentSlide);
-        }
-
-        function prevSlide() {
-            if (totalSlides <= 1) return;
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-            goToSlide(currentSlide);
-        }
-
-        function startAutoSlide() {
-            if (autoSlideInterval) clearInterval(autoSlideInterval);
-            if (totalSlides > 1) {
-                autoSlideInterval = setInterval(nextSlide, 5000);
-            }
-        }
-
-        function stopAutoSlide() {
-            if (autoSlideInterval) {
-                clearInterval(autoSlideInterval);
-                autoSlideInterval = null;
-            }
         }
 
         // ================== عرض رسالة خطأ ==================
@@ -558,6 +425,72 @@
             border-radius: 5px;
         }
 
+        /* بطاقة المنتج الرئيسي */
+        .product-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+
+        .product-image {
+            background: linear-gradient(145deg, #eef0ff, #ffffff);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .product-image img {
+            width: 180px;
+            max-width: 100%;
+            border-radius: 15px;
+            padding: 5px;
+        }
+
+        .product-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--main);
+        }
+
+        .product-desc {
+            margin-top: 8px;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .price {
+            color: var(--main);
+            font-weight: 700;
+            margin-top: 10px;
+            font-size: 1.2rem;
+        }
+
+        .order-btn {
+            margin-top: 15px;
+            display: inline-block;
+            background: var(--main);
+            color: #fff;
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .order-btn::before {
+            content: "\f232";
+            font-family: "Font Awesome 6 Brands";
+            margin-left: 8px;
+        }
+
         /* عناوين الأقسام */
         .section-heading {
             font-size: 22px;
@@ -571,7 +504,7 @@
             scroll-margin-top: 110px;
         }
 
-        /* قائمة المنتجات */
+        /* قائمة المنتجات - بدون border للصور */
         .product-list {
             display: flex;
             flex-direction: column;
@@ -609,13 +542,12 @@
             background: transparent;
             object-fit: cover;
             padding: 3px;
-            border: 2px solid var(--secondary);
+            border: none; /* إزالة border */
             transition: var(--transition);
         }
 
         .product-row:hover .product-left img {
             transform: scale(1.02);
-            border-color: var(--secondary);
         }
 
         .product-name {
@@ -633,208 +565,7 @@
             border-radius: 0;
         }
 
-        /* ===== سلايدر المنتجات الرئيسية ===== */
-        .featured-slider-section {
-            margin: 30px 0;
-            position: relative;
-            width: 100%;
-            overflow: visible;
-            border-radius: 20px;
-            background: transparent;
-            display: block;
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .featured-slider-container {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(43, 51, 147, 0.15);
-            background: white;
-        }
-
-        .featured-slider-wrapper {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-            width: 100%;
-        }
-
-        .featured-slide {
-            flex: 0 0 100%;
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        .featured-product-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid rgba(248, 200, 28, 0.3);
-        }
-
-        .featured-product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(43, 51, 147, 0.15);
-            border-color: var(--secondary);
-        }
-
-        .featured-product-image {
-            background: linear-gradient(145deg, #eef0ff, #ffffff);
-            padding: 30px 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .featured-product-image img {
-            width: 180px;
-            max-width: 100%;
-            height: auto;
-            border-radius: 15px;
-            transition: transform 0.5s ease;
-            border: 3px solid var(--secondary);
-            padding: 5px;
-            background: white;
-        }
-
-        .featured-product-card:hover .featured-product-image img {
-            transform: scale(1.05) rotate(2deg);
-        }
-
-        .featured-product-info {
-            padding: 20px;
-            text-align: center;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .featured-product-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--main);
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-
-        .featured-product-desc {
-            color: #666;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 15px;
-            flex: 1;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .featured-price {
-            color: var(--main);
-            font-weight: 800;
-            font-size: 1.5rem;
-            margin: 10px 0;
-        }
-
-        .featured-order-btn {
-            display: inline-block;
-            background: var(--main);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            border: 2px solid transparent;
-        }
-
-        .featured-order-btn:hover {
-            background: #1f256e;
-            transform: scale(1.02);
-        }
-
-        .featured-order-btn::before {
-            content: "\f232";
-            font-family: "Font Awesome 6 Brands";
-            margin-left: 8px;
-            font-size: 1.1rem;
-        }
-
-        .featured-slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: white;
-            border: 2px solid var(--secondary);
-            color: var(--main);
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            z-index: 10;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .featured-slider-btn:hover {
-            background: var(--secondary);
-            color: var(--main);
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .featured-slider-btn-prev {
-            left: 10px;
-        }
-
-        .featured-slider-btn-next {
-            right: 10px;
-        }
-
-        .featured-slider-dots {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-            padding: 10px;
-        }
-
-        .featured-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #ddd;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .featured-dot:hover {
-            background: var(--secondary);
-            transform: scale(1.1);
-        }
-
-        .featured-dot.active {
-            background: var(--main);
-            transform: scale(1.2);
-            border-color: var(--secondary);
-        }
-
-        /* المودال */
+        /* المودال - بدون border للصور */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -906,9 +637,9 @@
         .modal-image img {
             width: 150px;
             max-width: 100%;
-            border: 3px solid var(--secondary);
             border-radius: 15px;
             padding: 5px;
+            border: none; /* إزالة border */
         }
 
         .modal-details {
@@ -1036,39 +767,6 @@
         }
 
         /* تحسينات الجوال */
-        @media (max-width: 768px) {
-            .featured-product-image {
-                padding: 20px 15px;
-            }
-            
-            .featured-product-image img {
-                width: 140px;
-            }
-            
-            .featured-product-title {
-                font-size: 1.1rem;
-            }
-            
-            .featured-product-desc {
-                font-size: 0.85rem;
-            }
-            
-            .featured-price {
-                font-size: 1.3rem;
-            }
-            
-            .featured-order-btn {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-            }
-            
-            .featured-slider-btn {
-                width: 35px;
-                height: 35px;
-                font-size: 1.2rem;
-            }
-        }
-
         @media (max-width: 480px) {
             .product-left img {
                 width: 55px;
@@ -1091,55 +789,6 @@
             .section-heading {
                 font-size: 20px;
             }
-            
-            .featured-product-image img {
-                width: 120px;
-            }
-            
-            .featured-product-title {
-                font-size: 1rem;
-            }
-            
-            .featured-product-desc {
-                font-size: 0.8rem;
-            }
-            
-            .featured-price {
-                font-size: 1.2rem;
-            }
-            
-            .featured-slider-dots {
-                gap: 8px;
-            }
-            
-            .featured-dot {
-                width: 8px;
-                height: 8px;
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .featured-slide {
-            animation: fadeIn 0.5s ease;
-        }
-
-        .featured-product-image::after {
-            content: "⭐";
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.2rem;
-            opacity: 0.5;
         }
     </style>
 </head>
@@ -1162,7 +811,7 @@
     </div>
 
     <div class="container">
-        <!-- قسم العروض مع السلايدر -->
+        <!-- قسم العروض (ديناميكي) -->
         <div id="offer-section" class="scroll-margin">
             <div class="header">
                 <div class="badge" id="offerBadge">✨ أصنافنا الرمضانية ✨</div>
@@ -1170,21 +819,8 @@
                 <div class="line"></div>
             </div>
 
-            <!-- سلايدر المنتجات الرئيسية -->
-            <div class="featured-slider-section">
-                <div class="featured-slider-container">
-                    <div class="featured-slider-wrapper" id="featured-slider-wrapper">
-                        <!-- الشرائح تظهر هنا ديناميكياً -->
-                    </div>
-                    
-                    <!-- أزرار التنقل -->
-                    <button class="featured-slider-btn featured-slider-btn-prev" id="prevBtn">❮</button>
-                    <button class="featured-slider-btn featured-slider-btn-next" id="nextBtn">❯</button>
-                </div>
-                
-                <!-- نقاط المؤشر -->
-                <div class="featured-slider-dots" id="sliderDots"></div>
-            </div>
+            <!-- حاوية المنتجات الرئيسية (تظهر ديناميكياً) -->
+            <div id="featured-products-container"></div>
         </div>
 
         <!-- قسم الساندويتش -->
