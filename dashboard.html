@@ -2,12 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
 <script>
-‎    // التحقق من تسجيل الدخول
+    // التحقق من تسجيل الدخول
     if (localStorage.getItem('isLoggedIn') !== 'true') {
         window.location.href = 'login.html';
     }
     
-‎    // ================== تسجيل خروج تلقائي بعد 30 دقيقة ==================
+    // ================== تسجيل خروج تلقائي بعد 30 دقيقة ==================
     let logoutTimer;
     
     function resetLogoutTimer() {
@@ -18,16 +18,16 @@
             localStorage.removeItem('userEmail');
             localStorage.removeItem('userId');
             window.location.href = 'login.html';
-‎        }, 30 * 60 * 1000); // 30 دقيقة
+        }, 30 * 60 * 1000); // 30 دقيقة
     }
     
-‎    // إعادة تعيين المؤقت عند أي نشاط
+    // إعادة تعيين المؤقت عند أي نشاط
     document.addEventListener('mousemove', resetLogoutTimer);
     document.addEventListener('keypress', resetLogoutTimer);
     document.addEventListener('click', resetLogoutTimer);
     document.addEventListener('scroll', resetLogoutTimer);
     
-‎    // بدء المؤقت عند تحميل الصفحة
+    // بدء المؤقت عند تحميل الصفحة
     resetLogoutTimer();
 </script>
 
@@ -63,7 +63,7 @@
             min-height: 100vh;
         }
 
-‎        /* القائمة الجانبية */
+        /* القائمة الجانبية */
         .sidebar {
             width: var(--sidebar-width);
             background: white;
@@ -124,7 +124,7 @@
             color: white;
         }
 
-‎        /* المحتوى الرئيسي */
+        /* المحتوى الرئيسي */
         .main-content {
             flex: 1;
             margin-right: var(--sidebar-width);
@@ -133,7 +133,7 @@
             width: calc(100% - var(--sidebar-width));
         }
 
-‎        /* شريط العلوي */
+        /* شريط العلوي */
         .top-bar {
             background: white;
             padding: 15px;
@@ -176,7 +176,7 @@
             cursor: pointer;
         }
 
-‎        /* مؤقت تسجيل الخروج */
+        /* مؤقت تسجيل الخروج */
         .session-timer {
             background: #f0f2ff;
             padding: 5px 15px;
@@ -192,7 +192,7 @@
             color: var(--secondary);
         }
 
-‎        /* لوحة المعلومات المحسنة */
+        /* لوحة المعلومات المحسنة */
         .dashboard-stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -246,7 +246,7 @@
             color: #2e7d32;
         }
 
-‎        /* المنتجات الأكثر مشاهدة */
+        /* المنتجات الأكثر مشاهدة */
         .top-products {
             background: white;
             border-radius: 15px;
@@ -323,7 +323,7 @@
             color: var(--main);
         }
 
-‎        /* الرسم البياني */
+        /* الرسم البياني */
         .chart-container {
             background: white;
             border-radius: 15px;
@@ -343,7 +343,7 @@
             width: 100% !important;
         }
 
-‎        /* بطاقات الإحصائيات القديمة */
+        /* بطاقات الإحصائيات القديمة */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -384,7 +384,7 @@
             color: var(--main);
         }
 
-‎        /* نماذج الإدخال */
+        /* نماذج الإدخال */
         .content-card {
             background: white;
             border-radius: 20px;
@@ -420,7 +420,7 @@
             background: #fafbff;
         }
 
-‎        /* حقل رفع الملفات */
+        /* حقل رفع الملفات */
         .file-upload-area {
             border: 2px dashed #cbd5e0;
             border-radius: 12px;
@@ -470,7 +470,7 @@
             width: auto;
         }
 
-‎        /* جدول المنتجات مع البحث */
+        /* جدول المنتجات مع البحث */
         .products-table {
             width: 100%;
             border-collapse: collapse;
@@ -540,7 +540,7 @@
             color: var(--main);
         }
 
-‎        /* معاينة آخر المنتجات */
+        /* معاينة آخر المنتجات */
         #recentProductsPreview {
             display: flex;
             gap: 10px;
@@ -603,7 +603,7 @@
             color: var(--main);
         }
 
-‎        /* فلتر المنتجات مع البحث */
+        /* فلتر المنتجات مع البحث */
         .filter-section {
             display: flex;
             gap: 10px;
@@ -676,7 +676,7 @@
             accent-color: white;
         }
 
-‎        /* النوافذ المنبثقة */
+        /* النوافذ المنبثقة */
         .modal {
             display: none;
             position: fixed;
@@ -715,7 +715,7 @@
             color: #999;
         }
 
-‎        /* قسم الحالة في التعديل */
+        /* قسم الحالة في التعديل */
         .status-toggle {
             display: flex;
             align-items: center;
@@ -732,7 +732,7 @@
             cursor: pointer;
         }
 
-‎        /* تبويبات */
+        /* تبويبات */
         .tab-content {
             display: none;
         }
@@ -741,7 +741,7 @@
             display: block;
         }
 
-‎        /* رسالة تأكيد */
+        /* رسالة تأكيد */
         .toast-message {
             position: fixed;
             bottom: 20px;
@@ -762,7 +762,7 @@
             display: flex;
         }
 
-‎        /* تحسينات للشاشات الصغيرة */
+        /* تحسينات للشاشات الصغيرة */
         @media (max-width: 768px) {
             .form-grid {
                 grid-template-columns: 1fr;
@@ -821,7 +821,7 @@
     </style>
     
     <script type="module">
-‎        // ================== استيراد Firebase ==================
+        // ================== استيراد Firebase ==================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { 
             getFirestore, 
@@ -842,7 +842,7 @@
         const db = getFirestore(app);
         window.db = db;
 
-‎        // ================== المتغيرات العامة ==================
+        // ================== المتغيرات العامة ==================
         let products = [];
         let categories = [];
         let visitorsData = [];
@@ -873,7 +873,7 @@
             snapchat: ''
         };
 
-‎        // الأقسام الافتراضية (الثابتة)
+        // الأقسام الافتراضية (الثابتة)
         const defaultCategories = [
             { id: 'sauces', name: 'الصوصات', nameEn: 'Sauces', isDefault: true },
             { id: 'sandwich', name: 'الساندويتش', nameEn: 'Sandwich', isDefault: true },
@@ -884,10 +884,10 @@
             { id: 'specials', name: 'تشكيلة خاصة', nameEn: 'Specials', isDefault: true }
         ];
 
-‎        // متغير للرسم البياني
+        // متغير للرسم البياني
         let visitorsChart = null;
 
-‎        // ================== تسجيل زيارة في Firebase ==================
+        // ================== تسجيل زيارة في Firebase ==================
         async function recordVisit() {
             try {
                 const today = new Date().toISOString().split('T')[0];
@@ -899,13 +899,13 @@
                     visits = visitSnap.data();
                 }
                 
-‎                // زيادة عدد زوار اليوم
+                // زيادة عدد زوار اليوم
                 visits[today] = (visits[today] || 0) + 1;
                 
-‎                // حفظ في Firebase
+                // حفظ في Firebase
                 await setDoc(visitRef, visits);
                 
-‎                // تحديث البيانات المحلية
+                // تحديث البيانات المحلية
                 loadVisitorsData();
                 
             } catch (error) {
@@ -913,7 +913,7 @@
             }
         }
 
-‎        // ================== تحميل بيانات الزوار من Firebase ==================
+        // ================== تحميل بيانات الزوار من Firebase ==================
         async function loadVisitorsData() {
             try {
                 const visitRef = doc(db, "analytics", "visits");
@@ -922,7 +922,7 @@
                 if (visitSnap.exists()) {
                     const visits = visitSnap.data();
                     
-‎                    // تحويل البيانات إلى مصفوفة للرسم البياني
+                    // تحويل البيانات إلى مصفوفة للرسم البياني
                     visitorsData = [];
                     const today = new Date();
                     for (let i = 6; i >= 0; i--) {
@@ -936,11 +936,11 @@
                         });
                     }
                 } else {
-‎                    // بيانات افتراضية
+                    // بيانات افتراضية
                     visitorsData = generateMockVisitorsData();
                 }
 
-‎                // تحميل مشاهدات المنتجات
+                // تحميل مشاهدات المنتجات
                 const viewsRef = doc(db, "analytics", "productViews");
                 const viewsSnap = await getDoc(viewsRef);
                 if (viewsSnap.exists()) {
@@ -957,7 +957,7 @@
             }
         }
 
-‎        // ================== إنشاء بيانات تجريبية للزوار ==================
+        // ================== إنشاء بيانات تجريبية للزوار ==================
         function generateMockVisitorsData() {
             const data = [];
             const today = new Date();
@@ -973,7 +973,7 @@
             return data;
         }
 
-‎        // ================== تسجيل مشاهدة منتج ==================
+        // ================== تسجيل مشاهدة منتج ==================
         async function recordProductView(productId) {
             try {
                 const viewsRef = doc(db, "analytics", "productViews");
@@ -994,7 +994,7 @@
             }
         }
 
-‎        // ================== تحديث إحصائيات الزوار ==================
+        // ================== تحديث إحصائيات الزوار ==================
         function updateVisitorsStats() {
             const totalVisitors = visitorsData.reduce((sum, day) => sum + day.visitors, 0);
             const totalPageViews = visitorsData.reduce((sum, day) => sum + day.pageViews, 0);
@@ -1008,7 +1008,7 @@
             if (avgVisitorsEl) avgVisitorsEl.textContent = avgVisitors;
             if (totalPageViewsEl) totalPageViewsEl.textContent = totalPageViews;
 
-‎            // حساب نسبة التغير
+            // حساب نسبة التغير
             const trend = document.getElementById('visitorsTrend');
             if (trend && visitorsData.length >= 2) {
                 const lastDay = visitorsData[visitorsData.length - 1].visitors;
@@ -1019,18 +1019,18 @@
             }
         }
 
-‎        // ================== تحديث المنتجات الأكثر مشاهدة ==================
+        // ================== تحديث المنتجات الأكثر مشاهدة ==================
         function updateTopProducts() {
             const topProductsList = document.getElementById('topProductsList');
             if (!topProductsList) return;
 
-‎            // تحويل مشاهدات المنتجات إلى مصفوفة وترتيبها
+            // تحويل مشاهدات المنتجات إلى مصفوفة وترتيبها
             const viewsArray = Object.entries(productsViews).map(([id, views]) => {
                 const product = products.find(p => p.id === id);
                 return { ...product, views };
             }).filter(p => p && p.name);
 
-‎            // ترتيب حسب المشاهدات (الأعلى أولاً)
+            // ترتيب حسب المشاهدات (الأعلى أولاً)
             viewsArray.sort((a, b) => (b.views || 0) - (a.views || 0));
             const top5 = viewsArray.slice(0, 5);
 
@@ -1063,7 +1063,7 @@
             });
         }
 
-‎        // ================== تحديث الرسم البياني ==================
+        // ================== تحديث الرسم البياني ==================
         function updateVisitorsChart() {
             const ctx = document.getElementById('visitorsChart');
             if (!ctx) return;
@@ -1118,7 +1118,7 @@
             });
         }
 
-‎        // ================== تحميل إعدادات العروض ==================
+        // ================== تحميل إعدادات العروض ==================
         async function loadOfferSettings() {
             try {
                 const docRef = doc(db, "settings", "offer");
@@ -1128,7 +1128,7 @@
                     offerSettings = { ...offerSettings, ...docSnap.data() };
                 }
                 
-‎                // تحديث النموذج بالقيم المحملة
+                // تحديث النموذج بالقيم المحملة
                 const visibleCheckbox = document.getElementById('offerVisible');
                 if (visibleCheckbox) visibleCheckbox.checked = offerSettings.visible;
                 
@@ -1164,14 +1164,14 @@
             }
         }
 
-‎        // ================== حفظ إعدادات العروض ==================
+        // ================== حفظ إعدادات العروض ==================
         async function saveOfferSettings() {
             try {
                 const saveBtn = document.getElementById('saveOfferBtn');
                 saveBtn.disabled = true;
                 saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
 
-‎                // التحقق من وجود العناصر
+                // التحقق من وجود العناصر
                 const visibleCheckbox = document.getElementById('offerVisible');
                 const badgeInput = document.getElementById('offerBadge');
                 const titleInput = document.getElementById('offerTitle');
@@ -1188,7 +1188,7 @@
                     return;
                 }
                 
-‎                // تحديد مصدر الصورة
+                // تحديد مصدر الصورة
                 let imageUrl = document.getElementById('offerFinalImageData')?.value || imageUrlInput.value;
                 
                 if (!imageUrl) {
@@ -1215,7 +1215,7 @@
                 await setDoc(doc(db, "settings", "offer"), offerData);
                 offerSettings = offerData;
                 
-‎                // حفظ في localStorage
+                // حفظ في localStorage
                 localStorage.setItem('offerSettings', JSON.stringify(offerData));
                 
                 showToast('✅ تم حفظ إعدادات العروض بنجاح');
@@ -1230,7 +1230,7 @@
             }
         }
 
-‎        // ================== تحميل إعدادات التواصل الاجتماعي ==================
+        // ================== تحميل إعدادات التواصل الاجتماعي ==================
         async function loadSocialSettings() {
             try {
                 const docRef = doc(db, "settings", "social");
@@ -1240,7 +1240,7 @@
                     socialSettings = { ...socialSettings, ...docSnap.data() };
                 }
                 
-‎                // تحديث النموذج بالقيم المحملة
+                // تحديث النموذج بالقيم المحملة
                 const whatsappInput = document.getElementById('socialWhatsapp');
                 const instagramInput = document.getElementById('socialInstagram');
                 const tiktokInput = document.getElementById('socialTiktok');
@@ -1256,7 +1256,7 @@
             }
         }
 
-‎        // ================== حفظ إعدادات التواصل الاجتماعي ==================
+        // ================== حفظ إعدادات التواصل الاجتماعي ==================
         async function saveSocialSettings() {
             try {
                 const saveBtn = document.getElementById('saveSocialBtn');
@@ -1288,7 +1288,7 @@
             }
         }
 
-‎        // ================== معالجة الصور في العروض ==================
+        // ================== معالجة الصور في العروض ==================
         function setupOfferImageHandlers() {
             const urlOptionBtn = document.getElementById('offerUrlOptionBtn');
             const fileOptionBtn = document.getElementById('offerFileOptionBtn');
@@ -1335,7 +1335,7 @@
             }
         }
 
-‎        // ================== تحميل الأقسام من Firebase ==================
+        // ================== تحميل الأقسام من Firebase ==================
         async function loadCategories() {
             try {
                 const querySnapshot = await getDocs(collection(db, "categories"));
@@ -1344,10 +1344,10 @@
                     customCategories.push({ id: doc.id, ...doc.data(), isDefault: false });
                 });
                 
-‎                // دمج الأقسام الافتراضية مع المخصصة
+                // دمج الأقسام الافتراضية مع المخصصة
                 categories = [...defaultCategories, ...customCategories];
                 
-‎                // ترتيب الأقسام حسب الترتيب (الأقسام الافتراضية أولاً)
+                // ترتيب الأقسام حسب الترتيب (الأقسام الافتراضية أولاً)
                 categories.sort((a, b) => {
                     if (a.isDefault && !b.isDefault) return -1;
                     if (!a.isDefault && b.isDefault) return 1;
@@ -1366,7 +1366,7 @@
             }
         }
 
-‎        // ================== تحديث قائمة الأقسام في النماذج ==================
+        // ================== تحديث قائمة الأقسام في النماذج ==================
         function updateCategorySelect() {
             const selects = [
                 document.getElementById('productCategory'),
@@ -1397,7 +1397,7 @@
             });
         }
 
-‎        // ================== حفظ قسم مخصص جديد ==================
+        // ================== حفظ قسم مخصص جديد ==================
         async function saveCategory(categoryData) {
             try {
                 const docRef = await addDoc(collection(db, "categories"), categoryData);
@@ -1408,7 +1408,7 @@
             }
         }
 
-‎        // ================== تحديث قسم مخصص ==================
+        // ================== تحديث قسم مخصص ==================
         async function updateCategory(categoryId, categoryData) {
             try {
                 await updateDoc(doc(db, "categories", categoryId), categoryData);
@@ -1419,7 +1419,7 @@
             }
         }
 
-‎        // ================== حذف قسم مخصص ==================
+        // ================== حذف قسم مخصص ==================
         window.deleteCategory = async function(id) {
             if (!confirm('⚠️ هل أنت متأكد من حذف هذا القسم؟')) return;
             
@@ -1451,7 +1451,7 @@
             }
         };
 
-‎        // ================== فتح نافذة تعديل القسم ==================
+        // ================== فتح نافذة تعديل القسم ==================
         window.openEditCategoryModal = function(id) {
             const category = categories.find(c => c.id === id);
             if (!category || category.isDefault) {
@@ -1467,7 +1467,7 @@
             document.getElementById('editCategoryModal').style.display = 'flex';
         };
 
-‎        // ================== عرض الأقسام في الجدول ==================
+        // ================== عرض الأقسام في الجدول ==================
         function renderCategoriesTable() {
             const tbody = document.getElementById('categoriesTableBody');
             if (!tbody) return;
@@ -1507,7 +1507,7 @@
             });
         }
 
-‎        // ================== تحميل المنتجات ==================
+        // ================== تحميل المنتجات ==================
         async function loadProducts() {
             try {
                 const querySnapshot = await getDocs(collection(db, "products"));
@@ -1526,7 +1526,7 @@
             }
         }
 
-‎        // ================== تحديث حالة المنتج ==================
+        // ================== تحديث حالة المنتج ==================
         async function toggleProductStatus(productId, currentStatus) {
             const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
             
@@ -1553,21 +1553,21 @@
             }
         }
 
-‎        // ================== تطبيق الفلاتر والبحث ==================
+        // ================== تطبيق الفلاتر والبحث ==================
         function applyFilters() {
             let filteredProducts = products;
             
-‎            // فلترة حسب القسم
+            // فلترة حسب القسم
             if (currentFilterCategory !== 'all') {
                 filteredProducts = filteredProducts.filter(p => p.category === currentFilterCategory);
             }
             
-‎            // فلترة حسب الحالة
+            // فلترة حسب الحالة
             if (currentFilterStatus !== 'all') {
                 filteredProducts = filteredProducts.filter(p => p.status === currentFilterStatus);
             }
             
-‎            // فلترة حسب البحث
+            // فلترة حسب البحث
             if (currentSearchTerm.trim() !== '') {
                 const term = currentSearchTerm.trim().toLowerCase();
                 filteredProducts = filteredProducts.filter(p => 
@@ -1579,7 +1579,7 @@
             updateProductsTable(filteredProducts);
         }
 
-‎        // ================== تحديث إحصائيات لوحة المعلومات ==================
+        // ================== تحديث إحصائيات لوحة المعلومات ==================
         function updateDashboardStats() {
             const totalProductsEl = document.getElementById('dashboardTotalProducts');
             const totalCategoriesEl = document.getElementById('dashboardTotalCategories');
@@ -1588,7 +1588,7 @@
             if (totalCategoriesEl) totalCategoriesEl.innerText = categories.length;
         }
 
-‎        // ================== تحديث المنتج ==================
+        // ================== تحديث المنتج ==================
         async function updateProduct(productId, productData) {
             try {
                 await updateDoc(doc(db, "products", productId), productData);
@@ -1599,7 +1599,7 @@
             }
         }
 
-‎        // ================== فتح مودال تعديل المنتج ==================
+        // ================== فتح مودال تعديل المنتج ==================
         window.openEditProductModal = function(productId) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
@@ -1638,7 +1638,7 @@
             document.getElementById('editProductModal').style.display = 'flex';
         };
 
-‎        // ================== معالجة الصور في نافذة التعديل ==================
+        // ================== معالجة الصور في نافذة التعديل ==================
         document.addEventListener('DOMContentLoaded', function() {
             const editUrlOptionBtn = document.getElementById('editUrlOptionBtn');
             const editFileOptionBtn = document.getElementById('editFileOptionBtn');
@@ -1685,7 +1685,7 @@
             }
         });
 
-‎        // ================== حفظ تعديل المنتج ==================
+        // ================== حفظ تعديل المنتج ==================
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('editProductForm');
             if (!form) return;
@@ -1744,12 +1744,12 @@
             });
         });
 
-‎        // ================== إغلاق النوافذ المنبثقة ==================
+        // ================== إغلاق النوافذ المنبثقة ==================
         window.closeModal = function(modalId) {
             document.getElementById(modalId).style.display = 'none';
         };
 
-‎        // ================== حذف منتج ==================
+        // ================== حذف منتج ==================
         window.deleteProduct = async function(id) {
             if (!confirm('تأكيد الحذف؟')) return;
             try {
@@ -1761,12 +1761,12 @@
             }
         };
 
-‎        // ================== تحديث حالة المنتج من الجدول ==================
+        // ================== تحديث حالة المنتج من الجدول ==================
         window.toggleStatus = function(productId, currentStatus) {
             toggleProductStatus(productId, currentStatus);
         };
 
-‎        // ================== دوال العرض ==================
+        // ================== دوال العرض ==================
         function updateDisplay() {
             applyFilters();
             updateRecentPreview();
@@ -1835,7 +1835,7 @@
             });
         }
 
-‎        // ================== فلترة المنتجات والبحث ==================
+        // ================== فلترة المنتجات والبحث ==================
         window.filterProducts = function() {
             currentFilterCategory = document.getElementById('filterCategory').value;
             applyFilters();
@@ -1844,7 +1844,7 @@
         window.filterByStatus = function(status) {
             currentFilterStatus = status;
             
-‎            // تحديث الحالة النشطة للأزرار
+            // تحديث الحالة النشطة للأزرار
             document.querySelectorAll('.filter-status label').forEach(label => {
                 label.classList.remove('active');
             });
@@ -1858,7 +1858,7 @@
             applyFilters();
         };
 
-‎        // ================== دوال مساعدة ==================
+        // ================== دوال مساعدة ==================
         window.switchTab = function(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(tabId)?.classList.add('active');
@@ -1880,7 +1880,7 @@
             }
         };
 
-‎        // ================== إظهار رسالة toast ==================
+        // ================== إظهار رسالة toast ==================
         function showToast(message) {
             const toast = document.getElementById('toastMessage');
             toast.querySelector('span').innerText = message;
@@ -1888,7 +1888,7 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-‎        // ================== معالجة نموذج إضافة قسم ==================
+        // ================== معالجة نموذج إضافة قسم ==================
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('addCategoryForm');
             if (!form) return;
@@ -1924,7 +1924,7 @@
             });
         });
 
-‎        // ================== معالجة نموذج تعديل القسم ==================
+        // ================== معالجة نموذج تعديل القسم ==================
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('editCategoryForm');
             if (!form) return;
@@ -1961,7 +1961,7 @@
             });
         });
 
-‎        // ================== معالجة نموذج إضافة منتج ==================
+        // ================== معالجة نموذج إضافة منتج ==================
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('addProductForm');
             if (!form) return;
@@ -2035,7 +2035,7 @@
             });
         });
 
-‎        // ================== معالجة الصور في نموذج الإضافة ==================
+        // ================== معالجة الصور في نموذج الإضافة ==================
         document.addEventListener('DOMContentLoaded', function() {
             const urlOptionBtn = document.getElementById('urlOptionBtn');
             const fileOptionBtn = document.getElementById('fileOptionBtn');
@@ -2082,7 +2082,7 @@
             }
         });
 
-‎        // ================== معالجة نموذج حفظ العروض ==================
+        // ================== معالجة نموذج حفظ العروض ==================
         document.addEventListener('DOMContentLoaded', function() {
             const saveOfferBtn = document.getElementById('saveOfferBtn');
             if (saveOfferBtn) {
@@ -2092,7 +2092,7 @@
             setupOfferImageHandlers();
         });
 
-‎        // ================== معالجة نموذج حفظ التواصل ==================
+        // ================== معالجة نموذج حفظ التواصل ==================
         document.addEventListener('DOMContentLoaded', function() {
             const saveSocialBtn = document.getElementById('saveSocialBtn');
             if (saveSocialBtn) {
@@ -2100,20 +2100,20 @@
             }
         });
 
-‎        // تحميل البيانات
+        // تحميل البيانات
         loadCategories();
         loadProducts();
         loadOfferSettings();
         loadSocialSettings();
         loadVisitorsData();
         
-‎        // تسجيل زيارة لهذه الصفحة
+        // تسجيل زيارة لهذه الصفحة
         recordVisit();
     </script>
 </head>
 <body>
 
-‎    <!-- القائمة الجانبية -->
+    <!-- القائمة الجانبية -->
     <div class="sidebar">
         <div class="sidebar-logo">
             <img src="https://i.ibb.co/qMCd3wgR/IMG-6048.jpg" alt="لوجو" onerror="this.src='https://via.placeholder.com/100x50/2b3393/ffffff?text=Admin';">
@@ -2146,7 +2146,7 @@
         </div>
     </div>
 
-‎    <!-- المحتوى الرئيسي -->
+    <!-- المحتوى الرئيسي -->
     <div class="main-content">
         <div class="top-bar">
             <h1 class="page-title">لوحة التحكم</h1>
@@ -2165,9 +2165,9 @@
             </div>
         </div>
 
-‎        <!-- تبويب: لوحة المعلومات المتطورة -->
+        <!-- تبويب: لوحة المعلومات المتطورة -->
         <div id="dashboard-tab" class="tab-content active">
-‎            <!-- إحصائيات الزوار -->
+            <!-- إحصائيات الزوار -->
             <div class="dashboard-stats">
                 <div class="dashboard-card">
                     <div class="icon"><i class="fas fa-users"></i></div>
@@ -2203,22 +2203,22 @@
                 </div>
             </div>
 
-‎            <!-- الرسم البياني للزوار -->
+            <!-- الرسم البياني للزوار -->
             <div class="chart-container">
                 <h3><i class="fas fa-chart-line" style="margin-left: 8px;"></i> حركة الزوار خلال الأيام السبعة الماضية</h3>
                 <canvas id="visitorsChart"></canvas>
             </div>
 
-‎            <!-- المنتجات الأكثر مشاهدة -->
+            <!-- المنتجات الأكثر مشاهدة -->
             <div class="top-products">
                 <h3><i class="fas fa-fire" style="margin-left: 8px; color: #f8c81c;"></i> المنتجات الأكثر مشاهدة</h3>
                 <div class="top-products-list" id="topProductsList">
-‎                    <!-- يتم ملؤها تلقائياً -->
+                    <!-- يتم ملؤها تلقائياً -->
                 </div>
             </div>
         </div>
 
-‎        <!-- تبويب: العروض -->
+        <!-- تبويب: العروض -->
         <div id="offers-tab" class="tab-content">
             <div class="content-card">
                 <h2 style="color: var(--main); margin-bottom: 15px; font-size: 1.3rem;">
@@ -2228,7 +2228,7 @@
                 <div class="form-group">
                     <label>
                         <input type="checkbox" id="offerVisible" checked> 
-‎                        إظهار قسم العروض في الصفحة الرئيسية
+                        إظهار قسم العروض في الصفحة الرئيسية
                     </label>
                 </div>
                 
@@ -2314,7 +2314,7 @@
             </div>
         </div>
 
-‎        <!-- تبويب: إضافة منتج -->
+        <!-- تبويب: إضافة منتج -->
         <div id="add-product-tab" class="tab-content">
             <div class="stats-grid">
                 <div class="stat-card">
@@ -2412,14 +2412,14 @@
                 </form>
             </div>
 
-‎            <!-- آخر المنتجات المضافة -->
+            <!-- آخر المنتجات المضافة -->
             <div class="content-card">
                 <h3 style="color: var(--main); margin-bottom: 10px; font-size: 1.1rem;">آخر المنتجات المضافة</h3>
                 <div id="recentProductsPreview" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;"></div>
             </div>
         </div>
 
-‎        <!-- تبويب: المنتجات مع البحث -->
+        <!-- تبويب: المنتجات مع البحث -->
         <div id="products-tab" class="tab-content">
             <div class="content-card">
                 <h2 style="color: var(--main); margin-bottom: 15px; font-size: 1.3rem;">
@@ -2470,7 +2470,7 @@
             </div>
         </div>
 
-‎        <!-- تبويب: الأقسام -->
+        <!-- تبويب: الأقسام -->
         <div id="categories-tab" class="tab-content">
             <div class="content-card">
                 <h2 style="color: var(--main); margin-bottom: 15px; font-size: 1.3rem;">
@@ -2519,14 +2519,14 @@
             </div>
         </div>
 
-‎        <!-- تبويب: الإعدادات -->
+        <!-- تبويب: الإعدادات -->
         <div id="settings-tab" class="tab-content">
             <div class="content-card">
                 <h2 style="color: var(--main); margin-bottom: 15px; font-size: 1.3rem;">
                     <i class="fas fa-cog" style="margin-left: 8px;"></i>الإعدادات
                 </h2>
                 
-‎                <!-- إعدادات المتجر -->
+                <!-- إعدادات المتجر -->
                 <div style="background: #f0f2ff; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
                     <h3 style="color: var(--main); margin-bottom: 15px;">🏪 إعدادات المتجر</h3>
                     
@@ -2542,7 +2542,7 @@
                     </div>
                 </div>
                 
-‎                <!-- روابط التواصل الاجتماعي -->
+                <!-- روابط التواصل الاجتماعي -->
                 <div style="background: #f0f2ff; padding: 20px; border-radius: 15px;">
                     <h3 style="color: var(--main); margin-bottom: 15px;">🌐 روابط التواصل الاجتماعي</h3>
                     
@@ -2576,7 +2576,7 @@
         </div>
     </div>
 
-‎    <!-- نافذة تعديل المنتج -->
+    <!-- نافذة تعديل المنتج -->
     <div id="editProductModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -2662,7 +2662,7 @@
         </div>
     </div>
 
-‎    <!-- نافذة تعديل القسم -->
+    <!-- نافذة تعديل القسم -->
     <div id="editCategoryModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -2693,7 +2693,7 @@
         </div>
     </div>
 
-‎    <!-- رسالة تأكيد -->
+    <!-- رسالة تأكيد -->
     <div class="toast-message" id="toastMessage">
         <i class="fas fa-check-circle"></i>
         <span>تم الحفظ بنجاح!</span>
@@ -2707,7 +2707,7 @@ window.logout = function() {
     window.location.href = 'login.html';
 };
 
-‎// ================== تحديث مؤقت تسجيل الخروج ==================
+// ================== تحديث مؤقت تسجيل الخروج ==================
 let timeLeft = 30 * 60; // 30 دقيقة بالثواني
 const timerElement = document.getElementById('sessionTimer').querySelector('span');
 
@@ -2717,7 +2717,7 @@ function updateTimer() {
     timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     
     if (timeLeft <= 0) {
-‎        // تم تسجيل الخروج تلقائياً
+        // تم تسجيل الخروج تلقائياً
         return;
     }
     
@@ -2725,10 +2725,10 @@ function updateTimer() {
     setTimeout(updateTimer, 1000);
 }
 
-‎// بدء المؤقت
+// بدء المؤقت
 updateTimer();
 
-‎// إعادة تعيين المؤقت عند النشاط
+// إعادة تعيين المؤقت عند النشاط
 function resetTimer() {
     timeLeft = 30 * 60;
 }
