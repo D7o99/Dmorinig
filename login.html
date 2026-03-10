@@ -1,480 +1,989 @@
 <!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول | لوحة التحكم</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-        }
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-        body {
-            background: linear-gradient(135deg, #2b3393 0%, #1a1f5b 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+```
+<style>
+    :root {
+        --brand:       #2b3393;
+        --brand-dark:  #1a1f5b;
+        --brand-glow:  rgba(43,51,147,0.25);
+        --gold:        #f8c81c;
+        --gold-dark:   #d4a900;
+        --surface:     #ffffff;
+        --surface-2:   #f5f6ff;
+        --border:      #e4e6f5;
+        --text-main:   #16193a;
+        --text-muted:  #7a82b0;
+        --success:     #0ea472;
+        --error:       #e53e3e;
+    }
 
-        .login-container {
-            background: white;
-            border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 420px;
-            padding: 40px 30px;
-            position: relative;
-            overflow: hidden;
-        }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-        .login-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 150px;
-            height: 150px;
-            background: var(--secondary);
-            opacity: 0.1;
-            border-radius: 50%;
-            transform: translate(30px, -30px);
-        }
+    body {
+        font-family: 'Tajawal', sans-serif;
+        min-height: 100vh;
+        background: var(--brand-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 16px;
+        overflow-x: hidden;
+        position: relative;
+    }
 
-        .login-container::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 200px;
-            height: 200px;
-            background: var(--main);
-            opacity: 0.05;
-            border-radius: 50%;
-            transform: translate(-50px, 50px);
-        }
+    .bg {
+        position: fixed; inset: 0; z-index: 0;
+        background: radial-gradient(ellipse 80% 60% at 70% 10%, rgba(248,200,28,.08), transparent),
+                    radial-gradient(ellipse 60% 80% at 10% 80%, rgba(61,74,181,.18), transparent),
+                    var(--brand-dark);
+    }
 
-        :root {
-            --main: #2b3393;
-            --secondary: #f8c81c;
-        }
+    .grid-lines {
+        position: fixed; inset: 0; z-index: 0;
+        background-image:
+            linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+        background-size: 48px 48px;
+    }
 
-        .logo-section {
-            text-align: center;
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 1;
-        }
+    .particle {
+        position: fixed; border-radius: 50%;
+        background: var(--gold); opacity: 0;
+        animation: twinkle 4s ease-in-out infinite;
+    }
+    .particle:nth-child(1){width:4px;height:4px;top:15%;left:20%;animation-delay:0s;}
+    .particle:nth-child(2){width:3px;height:3px;top:70%;left:80%;animation-delay:1.5s;}
+    .particle:nth-child(3){width:5px;height:5px;top:40%;left:55%;animation-delay:3s;}
+    .particle:nth-child(4){width:3px;height:3px;top:85%;left:30%;animation-delay:0.8s;}
+    .particle:nth-child(5){width:4px;height:4px;top:25%;left:75%;animation-delay:2.2s;}
 
-        .logo-section img {
-            max-height: 80px;
-            width: auto;
-            margin-bottom: 15px;
-        }
+    @keyframes twinkle {
+        0%,100%{opacity:0;transform:scale(.5);}
+        50%{opacity:.7;transform:scale(1.2);}
+    }
 
-        .logo-section h1 {
-            color: var(--main);
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
+    .card {
+        position: relative; z-index: 1;
+        width: 100%; max-width: 430px;
+        background: var(--surface);
+        border-radius: 28px;
+        box-shadow: 0 40px 100px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06);
+        overflow: hidden;
+        animation: rise .7s cubic-bezier(.34,1.56,.64,1) both;
+    }
 
-        .logo-section p {
-            color: #666;
-            margin-top: 5px;
-        }
+    @keyframes rise {
+        from { opacity:0; transform:translateY(40px) scale(.96); }
+        to   { opacity:1; transform:translateY(0) scale(1); }
+    }
 
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
+    .card-head {
+        background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+        padding: 30px 32px 36px;
+        position: relative; overflow: hidden;
+    }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--main);
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
+    .card-head::before {
+        content:''; position:absolute;
+        width:260px; height:260px; border-radius:50%;
+        background: rgba(248,200,28,.08);
+        top:-80px; left:-60px;
+    }
+    .card-head::after {
+        content:''; position:absolute;
+        width:180px; height:180px; border-radius:50%;
+        background: rgba(255,255,255,.04);
+        bottom:-70px; right:-40px;
+    }
 
-        .input-icon {
-            position: relative;
-        }
+    .brand-row {
+        display: flex; align-items: center; gap: 14px;
+        position: relative; z-index:2; margin-bottom: 22px;
+    }
 
-        .input-icon i {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-            font-size: 1.1rem;
-        }
+    .brand-logo {
+        width: 54px; height: 54px; border-radius: 14px;
+        object-fit: cover;
+        border: 2px solid rgba(255,255,255,.15);
+        box-shadow: 0 8px 20px rgba(0,0,0,.25);
+    }
 
-        .input-icon input {
-            width: 100%;
-            padding: 15px 45px 15px 15px;
-            border: 2px solid #eef0ff;
-            border-radius: 15px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #fafbff;
-        }
+    .brand-info h1 { color: #fff; font-size: 1.25rem; font-weight: 900; line-height:1.2; }
+    .brand-info p  { color: var(--gold); font-size: .8rem; font-weight:500; }
 
-        .input-icon input:focus {
-            outline: none;
-            border-color: var(--main);
-            background: white;
-        }
+    .head-title { position:relative; z-index:2; }
+    .head-title h2 { color:#fff; font-size:1.55rem; font-weight:700; margin-bottom:4px; }
+    .head-title p  { color:rgba(255,255,255,.55); font-size:.88rem; }
 
-        .input-icon input::placeholder {
-            color: #bbb;
-            font-size: 0.9rem;
-        }
+    .tab-bar {
+        display: flex;
+        background: var(--surface-2);
+        border-bottom: 1px solid var(--border);
+    }
 
-        .password-toggle {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-            cursor: pointer;
-            font-size: 1.1rem;
-        }
+    .tab-btn {
+        flex:1; padding: 15px 12px;
+        border: none; background: transparent;
+        font-family: 'Tajawal', sans-serif;
+        font-size: .92rem; font-weight: 600;
+        color: var(--text-muted);
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        transition: all .3s ease;
+        position: relative;
+    }
 
-        .password-toggle:hover {
-            color: var(--main);
-        }
+    .tab-btn::after {
+        content:''; position:absolute; bottom:0; left:0; right:0;
+        height: 3px; border-radius: 3px 3px 0 0;
+        background: var(--brand);
+        transform: scaleX(0);
+        transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    }
 
-        .btn-login {
-            width: 100%;
-            background: var(--main);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 15px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 8px 20px rgba(43, 51, 147, 0.3);
-        }
+    .tab-btn.active { color: var(--brand); background: var(--surface); }
+    .tab-btn.active::after { transform: scaleX(1); }
+    .tab-btn i { font-size: .95rem; }
 
-        .btn-login:hover {
-            background: #1a1f5b;
-            transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(43, 51, 147, 0.4);
-        }
+    .card-body { padding: 30px 32px 24px; }
 
-        .btn-login:disabled {
-            background: #999;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+    .panel { display: none; animation: fade-up .35s ease both; }
+    .panel.active { display: block; }
 
-        .forgot-password {
-            text-align: left;
-            margin: 15px 0;
-            z-index: 1;
-            position: relative;
-        }
+    @keyframes fade-up {
+        from { opacity:0; transform:translateY(12px); }
+        to   { opacity:1; transform:translateY(0); }
+    }
 
-        .forgot-password a {
-            color: var(--main);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
+    .alert {
+        display: none;
+        align-items: flex-start; gap: 10px;
+        padding: 13px 15px;
+        border-radius: 13px;
+        font-size: .88rem; font-weight: 600;
+        margin-bottom: 20px;
+        animation: fade-up .3s ease;
+    }
+    .alert.show  { display: flex; }
+    .alert.error { background:#fff0f0; color:var(--error); border:1px solid #ffd5d5; }
+    .alert.ok    { background:#f0fff8; color:var(--success); border:1px solid #b7f5d8; }
+    .alert i { margin-top:2px; flex-shrink:0; }
 
-        .forgot-password a:hover {
-            color: var(--secondary);
-            text-decoration: underline;
-        }
+    .fgroup { margin-bottom: 18px; }
 
-        .message {
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: none;
-            font-size: 0.95rem;
-            text-align: center;
-            z-index: 1;
-            position: relative;
-        }
+    .fgroup label {
+        display: block;
+        font-size: .88rem; font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 8px;
+    }
 
-        .message.error {
-            background: #ffebee;
-            color: #c62828;
-            border: 1px solid #ffcdd2;
-        }
+    .finput-wrap { position: relative; }
 
-        .message.success {
-            background: #e8f5e9;
-            color: #2e7d32;
-            border: 1px solid #c8e6c9;
-        }
+    .finput-wrap .ico {
+        position: absolute;
+        top: 50%; transform: translateY(-50%);
+        font-size: .95rem; color: var(--text-muted);
+        transition: color .25s;
+    }
+    .finput-wrap .ico.r { right: 14px; pointer-events:none; }
+    .finput-wrap .ico.l { left: 14px; cursor: pointer; }
+    .finput-wrap .ico.l:hover { color: var(--brand); }
 
-        .footer-text {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-            font-size: 0.9rem;
-            z-index: 1;
-            position: relative;
-        }
+    .finput-wrap input {
+        width: 100%;
+        padding: 13px 44px;
+        border: 2px solid var(--border);
+        border-radius: 13px;
+        font-family: 'Tajawal', sans-serif;
+        font-size: .95rem;
+        color: var(--text-main);
+        background: var(--surface-2);
+        transition: all .25s ease;
+        outline: none;
+    }
+    .finput-wrap input:focus {
+        border-color: var(--brand);
+        background: #fff;
+        box-shadow: 0 0 0 4px var(--brand-glow);
+    }
+    .finput-wrap input:focus + .ico.r { color: var(--brand); }
+    .finput-wrap input::placeholder { color: #b8bbce; }
 
-        .footer-text a {
-            color: var(--main);
-            text-decoration: none;
-            font-weight: 600;
-        }
+    .phone-wrap { display: flex; gap: 8px; }
 
-        .footer-text a:hover {
-            color: var(--secondary);
-        }
+    .prefix-box {
+        display: flex; align-items: center; gap: 6px;
+        padding: 0 14px;
+        background: var(--surface-2);
+        border: 2px solid var(--border);
+        border-radius: 13px;
+        font-size: .9rem; font-weight: 700;
+        color: var(--text-main);
+        white-space: nowrap;
+        min-width: 80px;
+    }
+    .prefix-box span { font-size: 1.2rem; }
+    .phone-wrap .finput-wrap { flex:1; }
+    .phone-wrap input { padding-right: 14px; }
 
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-left: 10px;
-        }
+    .otp-grid {
+        display: flex; gap: 10px;
+        justify-content: center;
+        margin: 8px 0 6px;
+    }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+    .otp-cell {
+        width: 52px; height: 58px;
+        border: 2px solid var(--border);
+        border-radius: 13px;
+        background: var(--surface-2);
+        font-family: 'Tajawal', sans-serif;
+        font-size: 1.5rem; font-weight: 900;
+        color: var(--brand);
+        text-align: center;
+        outline: none;
+        transition: all .25s;
+        caret-color: transparent;
+    }
+    .otp-cell:focus {
+        border-color: var(--brand);
+        background: #fff;
+        box-shadow: 0 0 0 4px var(--brand-glow);
+        transform: scale(1.06);
+    }
+    .otp-cell.filled { border-color: var(--brand); background:#fff; }
 
-        /* Responsive */
-        @media (max-width: 480px) {
-            .login-container {
-                padding: 30px 20px;
-            }
-            
-            .logo-section h1 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
-    
-    <script type="module">
-        // ================== استيراد Firebase ==================
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    .resend-row {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-top: 14px;
+    }
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyARoaXISEB8yiCmes_EmZLhb-8ZtbwOR-k",
-            authDomain: "dmorinig-f29d9.firebaseapp.com",
-            projectId: "dmorinig-f29d9",
-            storageBucket: "dmorinig-f29d9.firebasestorage.app",
-            messagingSenderId: "813644062004",
-            appId: "1:813644062004:web:e822278f6ee5f2f6f05961",
-            measurementId: "G-77LJ79TDS2"
-        };
+    .countdown-text { font-size:.85rem; color:var(--text-muted); font-weight:500; }
+    .countdown-text strong { color:var(--brand); }
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+    .resend-btn {
+        background: none; border: none;
+        font-family: 'Tajawal', sans-serif;
+        font-size: .85rem; font-weight: 700;
+        color: var(--brand); cursor: pointer;
+        padding: 4px 8px; border-radius: 6px;
+        transition: background .2s;
+        display: none;
+    }
+    .resend-btn:hover { background: var(--surface-2); }
+    .resend-btn.show { display: block; }
 
-        // ================== عناصر الصفحة ==================
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const loginBtn = document.getElementById('loginBtn');
-        const messageDiv = document.getElementById('message');
-        const togglePassword = document.getElementById('togglePassword');
-        const forgotPasswordLink = document.getElementById('forgotPassword');
+    .options-row {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 22px; margin-top:-4px;
+    }
 
-        // ================== إظهار/إخفاء كلمة المرور ==================
-        togglePassword.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
-        });
+    .check-wrap {
+        display: flex; align-items: center; gap: 8px; cursor: pointer;
+    }
+    .check-wrap input { width:16px;height:16px; accent-color:var(--brand); cursor:pointer; }
+    .check-wrap span  { font-size:.83rem; color:var(--text-muted); font-weight:500; }
 
-        // ================== عرض الرسائل ==================
-        function showMessage(text, isSuccess = false) {
-            messageDiv.textContent = text;
-            messageDiv.className = isSuccess ? 'message success' : 'message error';
-            messageDiv.style.display = 'block';
-            
-            setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 5000);
-        }
+    .txt-link {
+        font-size:.83rem; font-weight:700;
+        color:var(--brand); text-decoration:none;
+        transition: color .2s;
+    }
+    .txt-link:hover { color: var(--gold-dark); }
 
-        // ================== تسجيل الدخول ==================
-        async function handleLogin() {
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
+    .btn-primary {
+        width: 100%; padding: 15px;
+        background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+        color: #fff;
+        border: none; border-radius: 14px;
+        font-family: 'Tajawal', sans-serif;
+        font-size: 1rem; font-weight: 700;
+        cursor: pointer; position: relative; overflow: hidden;
+        transition: all .3s ease;
+        box-shadow: 0 8px 28px var(--brand-glow);
+        letter-spacing: .3px;
+    }
 
-            if (!email || !password) {
-                showMessage('❌ الرجاء إدخال البريد الإلكتروني وكلمة المرور');
-                return;
-            }
+    .btn-primary::before {
+        content:''; position:absolute;
+        top:0; left:-100%; width:100%; height:100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,.13), transparent);
+        transition: left .5s;
+    }
+    .btn-primary:hover::before { left:100%; }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 14px 40px var(--brand-glow); }
+    .btn-primary:active { transform:translateY(0); }
+    .btn-primary:disabled {
+        background:linear-gradient(135deg,#9298c4,#6e74a8);
+        cursor:not-allowed; transform:none; box-shadow:none;
+    }
 
-            // تعطيل الزر وإظهار التحميل
-            loginBtn.disabled = true;
-            loginBtn.innerHTML = 'جاري تسجيل الدخول <span class="loading-spinner"></span>';
+    .btn-inner { display:flex; align-items:center; justify-content:center; gap:10px; }
 
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                
-                showMessage('✅ تم تسجيل الدخول بنجاح! جاري التحويل...', true);
-                
-                // تخزين حالة تسجيل الدخول
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('userEmail', userCredential.user.email);
-                localStorage.setItem('userId', userCredential.user.uid);
-                
-                // التحويل إلى لوحة التحكم بعد ثانيتين
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 2000);
-                
-            } catch (error) {
-                console.error('خطأ في تسجيل الدخول:', error);
-                
-                switch(error.code) {
-                    case 'auth/user-not-found':
-                        showMessage('❌ لا يوجد حساب بهذا البريد الإلكتروني');
-                        break;
-                    case 'auth/wrong-password':
-                        showMessage('❌ كلمة المرور غير صحيحة');
-                        break;
-                    case 'auth/invalid-email':
-                        showMessage('❌ البريد الإلكتروني غير صالح');
-                        break;
-                    case 'auth/too-many-requests':
-                        showMessage('❌ تم حظر الوصول مؤقتاً. حاول لاحقاً');
-                        break;
-                    case 'auth/invalid-credential':
-                        showMessage('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة');
-                        break;
-                    default:
-                        showMessage('❌ خطأ في تسجيل الدخول: ' + error.message);
-                }
-                
-                // إعادة الزر لحالته الطبيعية
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = 'تسجيل الدخول';
-            }
-        }
+    .spinner {
+        width:20px; height:20px;
+        border:2.5px solid rgba(255,255,255,.3);
+        border-top-color:#fff;
+        border-radius:50%;
+        animation:spin .8s linear infinite;
+        display:none;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
 
-        // ================== إعادة تعيين كلمة المرور ==================
-        async function handleForgotPassword() {
-            const email = emailInput.value.trim();
-            
-            if (!email) {
-                showMessage('❌ الرجاء إدخال البريد الإلكتروني');
-                return;
-            }
+    .step-indicator {
+        display: flex; align-items: center; justify-content: center;
+        gap: 8px; margin-bottom: 22px;
+    }
 
-            try {
-                await sendPasswordResetEmail(auth, email);
-                showMessage('✅ تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني', true);
-            } catch (error) {
-                console.error('خطأ في إعادة تعيين كلمة المرور:', error);
-                
-                switch(error.code) {
-                    case 'auth/user-not-found':
-                        showMessage('❌ لا يوجد حساب بهذا البريد الإلكتروني');
-                        break;
-                    case 'auth/invalid-email':
-                        showMessage('❌ البريد الإلكتروني غير صالح');
-                        break;
-                    default:
-                        showMessage('❌ خطأ: ' + error.message);
-                }
-            }
-        }
+    .step-dot {
+        width: 8px; height: 8px; border-radius: 50%;
+        background: var(--border);
+        transition: all .3s;
+    }
+    .step-dot.active { background:var(--brand); width:22px; border-radius:4px; }
+    .step-dot.done   { background:var(--success); }
 
-        // ================== مستمعي الأحداث ==================
-        loginBtn.addEventListener('click', handleLogin);
+    .back-btn {
+        background:none; border:none;
+        font-family:'Tajawal',sans-serif;
+        font-size:.85rem; font-weight:700;
+        color:var(--text-muted);
+        cursor:pointer; display:flex; align-items:center; gap:6px;
+        padding:0; margin-bottom:18px;
+        transition:color .2s;
+    }
+    .back-btn:hover { color:var(--brand); }
 
-        forgotPasswordLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            handleForgotPassword();
-        });
+    .phone-display {
+        text-align:center;
+        padding: 14px 16px;
+        background: var(--surface-2);
+        border-radius: 12px;
+        margin-bottom: 20px;
+        border:1px solid var(--border);
+    }
+    .phone-display p { font-size:.85rem; color:var(--text-muted); margin-bottom:3px; }
+    .phone-display strong { font-size:1rem; color:var(--brand); font-weight:700; }
 
-        // السماح بتسجيل الدخول بالضغط على Enter
-        passwordInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                handleLogin();
-            }
-        });
+    .card-foot {
+        padding: 16px 32px;
+        border-top:1px solid var(--border);
+        background:var(--surface-2);
+        text-align:center;
+    }
+    .card-foot p { font-size:.8rem; color:var(--text-muted); }
+    .card-foot a { color:var(--brand); font-weight:700; text-decoration:none; }
 
-        emailInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                handleLogin();
-            }
-        });
+    /* Modal */
+    .modal-overlay {
+        display:none; position:fixed; inset:0; z-index:200;
+        background:rgba(0,0,0,.6); backdrop-filter:blur(6px);
+        align-items:center; justify-content:center; padding:20px;
+    }
+    .modal-overlay.show { display:flex; animation:modal-bg .3s ease; }
+    @keyframes modal-bg  { from{opacity:0;} to{opacity:1;} }
 
-        // التحقق إذا كان المستخدم مسجل الدخول بالفعل
-        if (localStorage.getItem('isLoggedIn') === 'true') {
-            window.location.href = 'dashboard.html';
-        }
-    </script>
+    .modal-card {
+        background:#fff; border-radius:24px; padding:34px 30px;
+        width:100%; max-width:390px;
+        box-shadow:0 30px 70px rgba(0,0,0,.35);
+        animation:modal-pop .4s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes modal-pop { from{opacity:0;transform:scale(.85) translateY(20px);} to{opacity:1;transform:scale(1) translateY(0);} }
+
+    .modal-icon {
+        width:56px; height:56px; border-radius:16px;
+        background:linear-gradient(135deg,#eef0ff,#dfe2ff);
+        display:flex; align-items:center; justify-content:center;
+        margin:0 auto 14px;
+    }
+    .modal-icon i { color:var(--brand); font-size:1.3rem; }
+
+    .modal-card h3 { font-size:1.2rem; font-weight:800; color:var(--text-main); margin-bottom:6px; text-align:center; }
+    .modal-card > p { font-size:.85rem; color:var(--text-muted); line-height:1.6; text-align:center; margin-bottom:22px; }
+
+    .btn-secondary {
+        width:100%; padding:12px;
+        background:var(--surface-2); border:2px solid var(--border);
+        border-radius:12px; font-family:'Tajawal',sans-serif;
+        font-size:.9rem; font-weight:700; color:var(--text-muted);
+        cursor:pointer; transition:all .2s; margin-top:10px;
+    }
+    .btn-secondary:hover { border-color:var(--brand); color:var(--brand); }
+
+    @media(max-width:480px){
+        .card-head  { padding:24px 22px 30px; }
+        .card-body  { padding:24px 20px 20px; }
+        .card-foot  { padding:14px 20px; }
+        .otp-cell   { width:44px; height:52px; font-size:1.3rem; }
+    }
+</style>
+```
+
 </head>
 <body>
-    <div class="login-container">
-        <div class="logo-section">
-            <img src="https://i.ibb.co/qMCd3wgR/IMG-6048.jpg" alt="لوجو" onerror="this.src='https://via.placeholder.com/150x80/2b3393/ffffff?text=Logo';">
-            <h1>لوحة التحكم</h1>
-            <p>تسجيل الدخول لإدارة المنتجات</p>
-        </div>
 
-        <div id="message" class="message"></div>
+```
+<div class="bg"></div>
+<div class="grid-lines"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
 
-        <div class="form-group">
-            <label>البريد الإلكتروني</label>
-            <div class="input-icon">
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="email" placeholder="example@email.com" autocomplete="email">
+<div class="card">
+
+    <!-- Header -->
+    <div class="card-head">
+        <div class="brand-row">
+            <img class="brand-logo"
+                 src="https://i.ibb.co/qMCd3wgR/IMG-6048.jpg" alt="logo"
+                 onerror="this.src='https://placehold.co/54x54/2b3393/ffffff?text=D'">
+            <div class="brand-info">
+                <h1>لوحة التحكم</h1>
+                <p>إدارة المنتجات والطلبات</p>
             </div>
         </div>
-
-        <div class="form-group">
-            <label>كلمة المرور</label>
-            <div class="input-icon">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="password" placeholder="********" autocomplete="current-password">
-                <i class="fas fa-eye password-toggle" id="togglePassword"></i>
-            </div>
-        </div>
-
-        <div class="forgot-password">
-            <a href="#" id="forgotPassword">نسيت كلمة المرور؟</a>
-        </div>
-
-        <button class="btn-login" id="loginBtn">
-            تسجيل الدخول
-        </button>
-
-        <div class="footer-text">
-            <p>تم التطوير بواسطة <a href="#">دوائر</a></p>
+        <div class="head-title">
+            <h2>مرحباً بعودتك 👋</h2>
+            <p>اختر طريقة تسجيل الدخول</p>
         </div>
     </div>
 
-    <script>
-        // منع الرجوع إلى الصفحة السابقة بعد تسجيل الخروج
-        window.addEventListener('load', function() {
-            if (localStorage.getItem('isLoggedIn') === 'true') {
-                window.location.href = 'dashboard.html';
+    <!-- Tabs -->
+    <div class="tab-bar">
+        <button class="tab-btn active" data-tab="username" id="tab-username">
+            <i class="fas fa-user"></i> اسم المستخدم
+        </button>
+        <button class="tab-btn" data-tab="phone" id="tab-phone">
+            <i class="fas fa-mobile-screen"></i> رقم الجوال + OTP
+        </button>
+    </div>
+
+    <!-- Body -->
+    <div class="card-body">
+
+        <!-- ══ Panel: Username ══ -->
+        <div class="panel active" id="panel-username">
+
+            <div class="alert" id="alert-username"></div>
+
+            <div class="fgroup">
+                <label>اسم المستخدم</label>
+                <div class="finput-wrap">
+                    <input type="text" id="usernameInput"
+                           placeholder="أدخل اسم المستخدم"
+                           autocomplete="username">
+                    <i class="fas fa-user ico r"></i>
+                </div>
+            </div>
+
+            <div class="fgroup">
+                <label>كلمة المرور</label>
+                <div class="finput-wrap">
+                    <input type="password" id="passInput"
+                           placeholder="أدخل كلمة المرور"
+                           autocomplete="current-password">
+                    <i class="fas fa-lock ico r"></i>
+                    <i class="fas fa-eye ico l" id="togglePass"></i>
+                </div>
+            </div>
+
+            <div class="options-row">
+                <label class="check-wrap">
+                    <input type="checkbox" id="rememberMe">
+                    <span>تذكرني</span>
+                </label>
+                <a href="#" class="txt-link" id="forgotLink">نسيت كلمة المرور؟</a>
+            </div>
+
+            <button class="btn-primary" id="loginBtn">
+                <div class="btn-inner">
+                    <div class="spinner" id="loginSpinner"></div>
+                    <span id="loginBtnTxt"><i class="fas fa-arrow-right-to-bracket"></i> دخول</span>
+                </div>
+            </button>
+
+        </div>
+
+        <!-- ══ Panel: Phone OTP ══ -->
+        <div class="panel" id="panel-phone">
+
+            <!-- Step 1: Phone Entry -->
+            <div id="step-phone">
+                <div class="step-indicator">
+                    <div class="step-dot active"></div>
+                    <div class="step-dot"></div>
+                </div>
+
+                <div class="alert" id="alert-phone"></div>
+
+                <div class="fgroup">
+                    <label>رقم الجوال</label>
+                    <div class="phone-wrap">
+                        <div class="prefix-box">
+                            <span>🇸🇦</span> +966
+                        </div>
+                        <div class="finput-wrap">
+                            <input type="tel" id="phoneInput"
+                                   placeholder="5XXXXXXXX"
+                                   maxlength="9"
+                                   autocomplete="tel">
+                        </div>
+                    </div>
+                    <p style="font-size:.78rem;color:var(--text-muted);margin-top:8px;padding-right:4px;">
+                        <i class="fas fa-circle-info" style="color:var(--brand);"></i>
+                        سيتم إرسال رمز التحقق عبر رسالة SMS
+                    </p>
+                </div>
+
+                <div id="recaptcha-container"></div>
+
+                <button class="btn-primary" id="sendOtpBtn">
+                    <div class="btn-inner">
+                        <div class="spinner" id="sendOtpSpinner"></div>
+                        <span id="sendOtpTxt"><i class="fas fa-paper-plane"></i> إرسال رمز التحقق</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Step 2: OTP Verify -->
+            <div id="step-otp" style="display:none;">
+                <div class="step-indicator">
+                    <div class="step-dot done"></div>
+                    <div class="step-dot active"></div>
+                </div>
+
+                <button class="back-btn" id="backBtn">
+                    <i class="fas fa-arrow-right"></i> تغيير الرقم
+                </button>
+
+                <div class="alert" id="alert-otp"></div>
+
+                <div class="phone-display">
+                    <p>تم إرسال الرمز إلى</p>
+                    <strong id="phoneDisplayTxt"></strong>
+                </div>
+
+                <div class="fgroup">
+                    <label style="text-align:center;display:block;margin-bottom:14px;">
+                        أدخل رمز التحقق المكوّن من 6 أرقام
+                    </label>
+                    <div class="otp-grid" id="otpGrid">
+                        <input class="otp-cell" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+                        <input class="otp-cell" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+                        <input class="otp-cell" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+                        <input class="otp-cell" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+                        <input class="otp-cell" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+                        <input class="otp-cell" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+                    </div>
+
+                    <div class="resend-row">
+                        <div class="countdown-text" id="countdownWrap">
+                            إعادة الإرسال بعد <strong id="countdownNum">60</strong> ثانية
+                        </div>
+                        <button class="resend-btn" id="resendBtn">
+                            <i class="fas fa-rotate-right"></i> إعادة إرسال
+                        </button>
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="verifyBtn">
+                    <div class="btn-inner">
+                        <div class="spinner" id="verifySpinner"></div>
+                        <span id="verifyBtnTxt"><i class="fas fa-shield-check"></i> تحقق وسجّل الدخول</span>
+                    </div>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="card-foot">
+        <p>تم التطوير بواسطة <a href="#">دوائر</a> &nbsp;•&nbsp; جميع الحقوق محفوظة © 2025</p>
+    </div>
+</div>
+
+<!-- ══ Forgot Password Modal ══ -->
+<div class="modal-overlay" id="forgotModal">
+    <div class="modal-card">
+        <div class="modal-icon">
+            <i class="fas fa-key"></i>
+        </div>
+        <h3>إعادة تعيين كلمة المرور</h3>
+        <p>أدخل بريدك الإلكتروني وسنرسل لك رابط الاسترداد</p>
+
+        <div class="alert" id="alert-forgot"></div>
+
+        <div class="fgroup">
+            <label>البريد الإلكتروني</label>
+            <div class="finput-wrap">
+                <input type="email" id="forgotEmail" placeholder="example@email.com">
+                <i class="fas fa-envelope ico r"></i>
+            </div>
+        </div>
+
+        <button class="btn-primary" id="sendResetBtn">
+            <div class="btn-inner">
+                <div class="spinner" id="resetSpinner"></div>
+                <span id="resetBtnTxt">إرسال رابط الاسترداد</span>
+            </div>
+        </button>
+        <button class="btn-secondary" id="cancelForgotBtn">إلغاء</button>
+    </div>
+</div>
+
+
+<script type="module">
+    import { initializeApp }
+        from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail,
+             RecaptchaVerifier, signInWithPhoneNumber }
+        from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs }
+        from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    // ── Firebase config ──
+    const app  = initializeApp({
+        apiKey:            "AIzaSyARoaXISEB8yiCmes_EmZLhb-8ZtbwOR-k",
+        authDomain:        "dmorinig-f29d9.firebaseapp.com",
+        projectId:         "dmorinig-f29d9",
+        storageBucket:     "dmorinig-f29d9.firebasestorage.app",
+        messagingSenderId: "813644062004",
+        appId:             "1:813644062004:web:e822278f6ee5f2f6f05961"
+    });
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+    auth.languageCode = 'ar';
+
+    // ── State ──
+    let recaptchaVerifier  = null;
+    let confirmationResult = null;
+    let countdownTimer     = null;
+
+    // ════════════════════════════════════════
+    //  TABS
+    // ════════════════════════════════════════
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+        });
+    });
+
+    // ════════════════════════════════════════
+    //  ALERTS
+    // ════════════════════════════════════════
+    function showAlert(id, msg, type = 'error') {
+        const el = document.getElementById('alert-' + id);
+        el.className = `alert show ${type === 'ok' ? 'ok' : 'error'}`;
+        el.innerHTML = `<i class="fas ${type === 'ok' ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> ${msg}`;
+        if (type === 'ok') setTimeout(() => el.classList.remove('show'), 5000);
+    }
+    function clearAlert(id) {
+        const el = document.getElementById('alert-' + id);
+        if (el) el.classList.remove('show');
+    }
+
+    // ════════════════════════════════════════
+    //  TOGGLE PASSWORD
+    // ════════════════════════════════════════
+    document.getElementById('togglePass').addEventListener('click', function () {
+        const inp = document.getElementById('passInput');
+        const isPass = inp.type === 'password';
+        inp.type = isPass ? 'text' : 'password';
+        this.className = `fas fa-${isPass ? 'eye-slash' : 'eye'} ico l`;
+    });
+
+    // ════════════════════════════════════════
+    //  USERNAME LOGIN
+    // ════════════════════════════════════════
+    async function doUsernameLogin() {
+        const username = document.getElementById('usernameInput').value.trim();
+        const password = document.getElementById('passInput').value;
+
+        if (!username) { showAlert('username', 'يرجى إدخال اسم المستخدم'); return; }
+        if (!password) { showAlert('username', 'يرجى إدخال كلمة المرور');  return; }
+
+        setLoading('loginBtn', 'loginSpinner', 'loginBtnTxt', true);
+
+        try {
+            // Find email linked to username in Firestore
+            const snap = await getDocs(
+                query(collection(db, 'users'), where('username', '==', username))
+            );
+            if (snap.empty) {
+                showAlert('username', 'اسم المستخدم غير موجود في النظام');
+                return;
+            }
+            const email = snap.docs[0].data().email;
+            if (!email) {
+                showAlert('username', 'لا يوجد بريد إلكتروني مرتبط بهذا الحساب');
+                return;
+            }
+
+            const cred = await signInWithEmailAndPassword(auth, email, password);
+            showAlert('username', 'تم تسجيل الدخول بنجاح! جاري التحويل...', 'ok');
+            saveSession(cred.user);
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 1600);
+
+        } catch (e) {
+            const map = {
+                'auth/wrong-password':     'كلمة المرور غير صحيحة',
+                'auth/invalid-credential': 'كلمة المرور غير صحيحة',
+                'auth/too-many-requests':  'تم تعليق الحساب مؤقتاً بسبب محاولات متعددة',
+                'auth/network-request-failed': 'خطأ في الاتصال بالشبكة',
+            };
+            showAlert('username', map[e.code] || 'حدث خطأ: ' + e.message);
+        } finally {
+            setLoading('loginBtn', 'loginSpinner', 'loginBtnTxt', false,
+                '<i class="fas fa-arrow-right-to-bracket"></i> دخول');
+        }
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', doUsernameLogin);
+    document.getElementById('usernameInput').addEventListener('keydown', e => { if (e.key === 'Enter') doUsernameLogin(); });
+    document.getElementById('passInput').addEventListener('keydown',    e => { if (e.key === 'Enter') doUsernameLogin(); });
+
+    // ════════════════════════════════════════
+    //  SEND OTP
+    // ════════════════════════════════════════
+    async function sendOTP() {
+        const raw = document.getElementById('phoneInput').value.trim().replace(/\s/g, '');
+        if (!raw || raw.length < 9) {
+            showAlert('phone', 'يرجى إدخال رقم جوال صحيح (9 أرقام بدون الصفر)');
+            return;
+        }
+        const phone = '+966' + raw.replace(/^0/, '');
+
+        setLoading('sendOtpBtn', 'sendOtpSpinner', 'sendOtpTxt', true);
+        clearAlert('phone');
+
+        try {
+            if (!recaptchaVerifier) {
+                recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                    size: 'invisible',
+                    callback: () => {}
+                });
+            }
+
+            confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
+
+            // Go to OTP step
+            document.getElementById('step-phone').style.display = 'none';
+            document.getElementById('step-otp').style.display   = 'block';
+            document.getElementById('phoneDisplayTxt').textContent = phone;
+
+            startCountdown();
+            document.querySelectorAll('.otp-cell')[0].focus();
+
+        } catch (e) {
+            const map = {
+                'auth/invalid-phone-number':  'رقم الجوال غير صالح',
+                'auth/too-many-requests':      'تم حظر الطلبات مؤقتاً. حاول لاحقاً',
+                'auth/quota-exceeded':         'تجاوزت الحد اليومي لإرسال الرسائل',
+                'auth/captcha-check-failed':   'فشل التحقق، أعد المحاولة',
+                'auth/network-request-failed': 'خطأ في الاتصال بالشبكة',
+            };
+            showAlert('phone', map[e.code] || 'حدث خطأ: ' + e.message);
+            if (recaptchaVerifier) { recaptchaVerifier.clear(); recaptchaVerifier = null; }
+        } finally {
+            setLoading('sendOtpBtn', 'sendOtpSpinner', 'sendOtpTxt', false,
+                '<i class="fas fa-paper-plane"></i> إرسال رمز التحقق');
+        }
+    }
+
+    document.getElementById('sendOtpBtn').addEventListener('click', sendOTP);
+    document.getElementById('phoneInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendOTP(); });
+
+    // ════════════════════════════════════════
+    //  VERIFY OTP
+    // ════════════════════════════════════════
+    async function verifyOTP() {
+        const cells = document.querySelectorAll('.otp-cell');
+        const code  = Array.from(cells).map(c => c.value).join('');
+        if (code.length < 6) { showAlert('otp', 'يرجى إدخال الرمز كاملاً (6 أرقام)'); return; }
+
+        setLoading('verifyBtn', 'verifySpinner', 'verifyBtnTxt', true);
+
+        try {
+            const cred = await confirmationResult.confirm(code);
+            clearInterval(countdownTimer);
+            showAlert('otp', 'تم التحقق بنجاح! جاري التحويل...', 'ok');
+            saveSession(cred.user);
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 1600);
+        } catch (e) {
+            const map = {
+                'auth/invalid-verification-code': 'الرمز غير صحيح، تحقق وأعد المحاولة',
+                'auth/code-expired':              'انتهت صلاحية الرمز، اطلب رمزاً جديداً',
+                'auth/session-expired':           'انتهت الجلسة، أعد إرسال الرمز',
+            };
+            showAlert('otp', map[e.code] || 'حدث خطأ: ' + e.message);
+            cells.forEach(c => { c.value = ''; c.classList.remove('filled'); });
+            cells[0].focus();
+        } finally {
+            setLoading('verifyBtn', 'verifySpinner', 'verifyBtnTxt', false,
+                '<i class="fas fa-shield-check"></i> تحقق وسجّل الدخول');
+        }
+    }
+
+    document.getElementById('verifyBtn').addEventListener('click', verifyOTP);
+
+    // ── Back to phone step ──
+    document.getElementById('backBtn').addEventListener('click', () => {
+        clearInterval(countdownTimer);
+        document.getElementById('step-otp').style.display   = 'none';
+        document.getElementById('step-phone').style.display = 'block';
+        document.querySelectorAll('.otp-cell').forEach(c => { c.value = ''; c.classList.remove('filled'); });
+        if (recaptchaVerifier) { recaptchaVerifier.clear(); recaptchaVerifier = null; }
+        clearAlert('otp');
+    });
+
+    // ── Resend OTP ──
+    document.getElementById('resendBtn').addEventListener('click', async () => {
+        document.getElementById('resendBtn').classList.remove('show');
+        document.querySelectorAll('.otp-cell').forEach(c => { c.value = ''; c.classList.remove('filled'); });
+        const phone = document.getElementById('phoneDisplayTxt').textContent;
+        if (recaptchaVerifier) { recaptchaVerifier.clear(); recaptchaVerifier = null; }
+        try {
+            recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                size: 'invisible', callback: () => {}
+            });
+            confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
+            showAlert('otp', 'تم إعادة إرسال الرمز بنجاح ✓', 'ok');
+            startCountdown();
+        } catch (e) {
+            showAlert('otp', 'فشل إعادة الإرسال: ' + e.message);
+        }
+    });
+
+    // ── OTP Cells behavior ──
+    document.querySelectorAll('.otp-cell').forEach((cell, idx, cells) => {
+        cell.addEventListener('input', () => {
+            cell.value = cell.value.replace(/\D/g, '').slice(-1);
+            cell.classList.toggle('filled', cell.value !== '');
+            if (cell.value && idx < cells.length - 1) cells[idx + 1].focus();
+            if (Array.from(cells).every(c => c.value !== '')) verifyOTP();
+        });
+
+        cell.addEventListener('keydown', e => {
+            if (e.key === 'Backspace' && !cell.value && idx > 0) {
+                cells[idx - 1].value = '';
+                cells[idx - 1].classList.remove('filled');
+                cells[idx - 1].focus();
             }
         });
-    </script>
+
+        cell.addEventListener('paste', e => {
+            e.preventDefault();
+            const pasted = (e.clipboardData || window.clipboardData)
+                .getData('text').replace(/\D/g, '');
+            [...pasted.slice(0, 6)].forEach((ch, i) => {
+                if (cells[i]) { cells[i].value = ch; cells[i].classList.add('filled'); }
+            });
+            const next = Math.min(pasted.length, 5);
+            cells[next].focus();
+            if (pasted.length >= 6) verifyOTP();
+        });
+    });
+
+    // ── Countdown ──
+    function startCountdown() {
+        let secs = 60;
+        document.getElementById('countdownNum').textContent = secs;
+        document.getElementById('countdownWrap').style.display = 'block';
+        document.getElementById('resendBtn').classList.remove('show');
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(() => {
+            secs--;
+            document.getElementById('countdownNum').textContent = secs;
+            if (secs <= 0) {
+                clearInterval(countdownTimer);
+                document.getElementById('countdownWrap').style.display = 'none';
+                document.getElementById('resendBtn').classList.add('show');
+            }
+        }, 1000);
+    }
+
+    // ════════════════════════════════════════
+    //  FORGOT PASSWORD
+    // ════════════════════════════════════════
+    document.getElementById('forgotLink').addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById('forgotModal').classList.add('show');
+    });
+
+    document.getElementById('cancelForgotBtn').addEventListener('click', () => {
+        document.getElementById('forgotModal').classList.remove('show');
+        clearAlert('forgot');
+    });
+
+    document.getElementById('forgotModal').addEventListener('click', function (e) {
+        if (e.target === this) { this.classList.remove('show'); clearAlert('forgot'); }
+    });
+
+    document.getElementById('sendResetBtn').addEventListener('click', async () => {
+        const email = document.getElementById('forgotEmail').value.trim();
+        if (!email) { showAlert('forgot', 'يرجى إدخال البريد الإلكتروني'); return; }
+
+        setLoading('sendResetBtn', 'resetSpinner', 'resetBtnTxt', true);
+
+        try {
+            await sendPasswordResetEmail(auth, email);
+            showAlert('forgot', 'تم إرسال رابط الاسترداد إلى بريدك ✉️', 'ok');
+            setTimeout(() => {
+                document.getElementById('forgotModal').classList.remove('show');
+                clearAlert('forgot');
+            }, 3000);
+        } catch (e) {
+            const map = {
+                'auth/user-not-found': 'لا يوجد حساب بهذا البريد الإلكتروني',
+                'auth/invalid-email':  'البريد الإلكتروني غير صالح',
+            };
+            showAlert('forgot', map[e.code] || e.message);
+        } finally {
+            setLoading('sendResetBtn', 'resetSpinner', 'resetBtnTxt', false, 'إرسال رابط الاسترداد');
+        }
+    });
+
+    // ════════════════════════════════════════
+    //  HELPERS
+    // ════════════════════════════════════════
+    function setLoading(btnId, spId, txtId, loading, label = '') {
+        document.getElementById(btnId).disabled = loading;
+        document.getElementById(spId).style.display  = loading ? 'block' : 'none';
+        if (!loading && label) document.getElementById(txtId).innerHTML = label;
+    }
+
+    function saveSession(user) {
+        const remember = document.getElementById('rememberMe');
+        const store = (remember && remember.checked) ? localStorage : sessionStorage;
+        store.setItem('isLoggedIn', 'true');
+        store.setItem('userId',    user.uid);
+        store.setItem('userEmail', user.email       || '');
+        store.setItem('userPhone', user.phoneNumber || '');
+    }
+
+    // Auto redirect if logged in
+    if (localStorage.getItem('isLoggedIn')   === 'true' ||
+        sessionStorage.getItem('isLoggedIn') === 'true') {
+        window.location.href = 'dashboard.html';
+    }
+</script>
+```
+
 </body>
 </html>
