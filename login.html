@@ -7,376 +7,122 @@
     <title>تسجيل الدخول | لوحة التحكم</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-```
-<style>
-    :root {
-        --brand:      #2b3393;
-        --brand-deep: #1a1f5b;
-        --brand-mid:  #3d4ab5;
-        --gold:       #f8c81c;
-        --glow:       rgba(43,51,147,0.22);
-        --white:      #ffffff;
-        --bg2:        #f4f5ff;
-        --line:       #e2e4f3;
-        --ink:        #15193b;
-        --muted:      #7880b0;
-        --ok:         #059669;
-        --err:        #dc2626;
-    }
-
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-
-    body {
-        font-family: 'Tajawal', sans-serif;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px 16px;
-        background: var(--brand-deep);
-        overflow: hidden;
-        position: relative;
-    }
-
-    /* ─── Background ─── */
-    .scene {
-        position: fixed; inset: 0; z-index: 0;
-        overflow: hidden;
-    }
-
-    .scene-blob {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(90px);
-        opacity: .12;
-    }
-    .b1 { width:550px;height:550px; background:var(--gold);   top:-180px; right:-120px; animation: drift 9s ease-in-out infinite; }
-    .b2 { width:450px;height:450px; background:var(--brand-mid); bottom:-130px; left:-80px;  animation: drift 11s ease-in-out infinite reverse; }
-    .b3 { width:250px;height:250px; background:#8891e0;        top:50%; left:55%;         animation: drift 7s ease-in-out infinite 2s; opacity:.08; }
-
-    @keyframes drift {
-        0%,100% { transform: translate(0,0) scale(1); }
-        50%      { transform: translate(20px,-25px) scale(1.04); }
-    }
-
-    .grid {
-        position: fixed; inset: 0; z-index: 0;
-        background-image:
-            linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
-        background-size: 44px 44px;
-    }
-
-    /* ─── Stars ─── */
-    .star {
-        position: fixed; border-radius: 50%;
-        background: #fff; opacity: 0;
-        animation: blink 4s ease-in-out infinite;
-    }
-    .star:nth-child(1){width:3px;height:3px;top:12%;left:18%;animation-delay:0s;}
-    .star:nth-child(2){width:2px;height:2px;top:68%;left:82%;animation-delay:1.8s;}
-    .star:nth-child(3){width:4px;height:4px;top:38%;left:52%;animation-delay:3.2s;}
-    .star:nth-child(4){width:2px;height:2px;top:80%;left:28%;animation-delay:.9s;}
-    .star:nth-child(5){width:3px;height:3px;top:22%;left:73%;animation-delay:2.5s;}
-
-    @keyframes blink {
-        0%,100% { opacity:0; transform:scale(.4); }
-        50%      { opacity:.6; transform:scale(1); }
-    }
-
-    /* ─── Card ─── */
-    .card {
-        position: relative; z-index: 1;
-        width: 100%; max-width: 420px;
-        background: var(--white);
-        border-radius: 26px;
-        overflow: hidden;
-        box-shadow:
-            0 50px 100px rgba(0,0,0,.42),
-            0 0 0 1px rgba(255,255,255,.07) inset;
-        animation: pop-in .65s cubic-bezier(.34,1.56,.64,1) both;
-    }
-
-    @keyframes pop-in {
-        from { opacity:0; transform:translateY(44px) scale(.95); }
-        to   { opacity:1; transform:translateY(0)    scale(1);   }
-    }
-
-    /* ─── Header ─── */
-    .head {
-        background: linear-gradient(140deg, var(--brand) 0%, var(--brand-deep) 100%);
-        padding: 28px 30px 34px;
-        position: relative; overflow: hidden;
-    }
-
-    .head-ring1 {
-        position:absolute; border-radius:50%;
-        width:240px;height:240px;
-        border: 1px solid rgba(255,255,255,.07);
-        top:-90px; left:-70px;
-    }
-    .head-ring2 {
-        position:absolute; border-radius:50%;
-        width:160px;height:160px;
-        border: 1px solid rgba(248,200,28,.12);
-        bottom:-60px; right:-40px;
-    }
-    .head-dot {
-        position:absolute; border-radius:50%;
-        width:80px;height:80px;
-        background:rgba(248,200,28,.07);
-        top:10px; right:20px;
-    }
-
-    .logo-row {
-        display:flex; align-items:center; gap:13px;
-        position:relative; z-index:2;
-        margin-bottom:20px;
-    }
-
-    .logo-img {
-        width:50px; height:50px; border-radius:13px;
-        object-fit:cover;
-        border:2px solid rgba(255,255,255,.18);
-        box-shadow:0 6px 18px rgba(0,0,0,.28);
-    }
-
-    .logo-text h1 {
-        color:#fff; font-size:1.2rem; font-weight:900; line-height:1.15;
-    }
-    .logo-text p { color:var(--gold); font-size:.75rem; font-weight:500; margin-top:1px; }
-
-    .head-copy { position:relative; z-index:2; }
-    .head-copy h2 { color:#fff; font-size:1.5rem; font-weight:800; margin-bottom:4px; }
-    .head-copy p  { color:rgba(255,255,255,.52); font-size:.85rem; line-height:1.5; }
-
-    /* ─── Body ─── */
-    .body { padding: 28px 30px 22px; }
-
-    /* ─── Info badge ─── */
-    .info-badge {
-        display:flex; align-items:center; gap:10px;
-        background: #eef0ff;
-        border:1px solid #d5d9ff;
-        border-radius:12px;
-        padding:11px 14px;
-        margin-bottom:22px;
-    }
-    .info-badge i { color:var(--brand); font-size:.9rem; flex-shrink:0; }
-    .info-badge p { font-size:.8rem; color:var(--brand); font-weight:600; line-height:1.5; }
-
-    /* ─── Alert ─── */
-    .alert {
-        display:none;
-        align-items:flex-start; gap:9px;
-        padding:12px 14px;
-        border-radius:12px;
-        font-size:.86rem; font-weight:700;
-        margin-bottom:18px;
-    }
-    .alert.show  { display:flex; animation: slide-in .28s ease; }
-    .alert.err   { background:#fef2f2; color:var(--err); border:1px solid #fecaca; }
-    .alert.ok    { background:#f0fdf4; color:var(--ok);  border:1px solid #bbf7d0; }
-    .alert i     { margin-top:1px; flex-shrink:0; font-size:.85rem; }
-
-    @keyframes slide-in {
-        from { opacity:0; transform:translateY(-6px); }
-        to   { opacity:1; transform:translateY(0); }
-    }
-
-    /* ─── Form group ─── */
-    .fg { margin-bottom:16px; }
-
-    .fg label {
-        display:block;
-        font-size:.84rem; font-weight:800;
-        color:var(--ink);
-        margin-bottom:7px;
-        letter-spacing:.2px;
-    }
-
-    .fw { position:relative; }
-
-    /* icon on RIGHT  (label icon) */
-    .fw .ir {
-        position:absolute; right:13px; top:50%; transform:translateY(-50%);
-        font-size:.88rem; color:var(--muted);
-        pointer-events:none;
-        transition:color .25s;
-    }
-    /* icon on LEFT (action icon) */
-    .fw .il {
-        position:absolute; left:13px; top:50%; transform:translateY(-50%);
-        font-size:.88rem; color:var(--muted);
-        cursor:pointer; transition:color .2s;
-    }
-    .fw .il:hover { color:var(--brand); }
-
-    .fw input {
-        width:100%;
-        padding:13px 42px 13px 42px;
-        border:2px solid var(--line);
-        border-radius:12px;
-        font-family:'Tajawal',sans-serif;
-        font-size:.93rem; color:var(--ink);
-        background:var(--bg2);
-        outline:none;
-        transition:all .25s ease;
-    }
-    .fw input:focus {
-        border-color:var(--brand);
-        background:#fff;
-        box-shadow:0 0 0 4px var(--glow);
-    }
-    .fw input:focus ~ .ir { color:var(--brand); }
-    .fw input::placeholder { color:#bdc2d8; font-size:.88rem; }
-
-    /* phone prefix row */
-    .phone-row { display:flex; gap:8px; }
-    .prefix {
-        display:flex; align-items:center; gap:6px;
-        padding:0 13px;
-        background:var(--bg2); border:2px solid var(--line);
-        border-radius:12px;
-        font-size:.85rem; font-weight:800; color:var(--ink);
-        white-space:nowrap; flex-shrink:0;
-        transition:border-color .25s;
-    }
-    .prefix .flag { font-size:1.1rem; }
-    .phone-row .fw { flex:1; }
-    .phone-row input { padding-right:14px; }
-
-    /* ─── Remember + show password row ─── */
-    .meta-row {
-        display:flex; align-items:center; justify-content:space-between;
-        margin-bottom:20px; margin-top:-2px;
-    }
-
-    .cb-wrap {
-        display:flex; align-items:center; gap:7px; cursor:pointer;
-    }
-    .cb-wrap input[type=checkbox] {
-        width:15px; height:15px; accent-color:var(--brand); cursor:pointer;
-    }
-    .cb-wrap span { font-size:.8rem; color:var(--muted); font-weight:600; }
-
-    /* ─── Submit ─── */
-    .btn {
-        width:100%; padding:14px;
-        background:linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%);
-        color:#fff; border:none; border-radius:13px;
-        font-family:'Tajawal',sans-serif;
-        font-size:1rem; font-weight:800;
-        cursor:pointer; position:relative; overflow:hidden;
-        transition:all .3s ease;
-        box-shadow:0 8px 26px var(--glow);
-        letter-spacing:.3px;
-    }
-    .btn::before {
-        content:''; position:absolute;
-        top:0; left:-110%; width:100%; height:100%;
-        background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);
-        transition:left .5s;
-    }
-    .btn:hover::before { left:110%; }
-    .btn:hover { transform:translateY(-2px); box-shadow:0 14px 36px var(--glow); }
-    .btn:active { transform:translateY(0); }
-    .btn:disabled {
-        background:linear-gradient(135deg,#8f96c6,#6870a6);
-        cursor:not-allowed; transform:none; box-shadow:none;
-    }
-
-    .btn-inner { display:flex; align-items:center; justify-content:center; gap:9px; }
-
-    .spin {
-        width:19px; height:19px;
-        border:2.5px solid rgba(255,255,255,.3);
-        border-top-color:#fff;
-        border-radius:50%;
-        animation:spin .75s linear infinite;
-        display:none;
-    }
-    @keyframes spin { to { transform:rotate(360deg); } }
-
-    /* ─── Divider ─── */
-    .divider {
-        display:flex; align-items:center; gap:10px;
-        margin:18px 0;
-    }
-    .divider::before, .divider::after {
-        content:''; flex:1; height:1px; background:var(--line);
-    }
-    .divider span { font-size:.75rem; color:#c4c8de; font-weight:600; }
-
-    /* ─── Security note ─── */
-    .sec-note {
-        display:flex; align-items:center; gap:8px;
-        background:linear-gradient(135deg,#f9fafe,#f1f3ff);
-        border:1px solid var(--line);
-        border-radius:10px;
-        padding:10px 13px;
-        margin-top:16px;
-    }
-    .sec-note i { color:var(--brand); font-size:.8rem; flex-shrink:0; }
-    .sec-note p { font-size:.75rem; color:var(--muted); font-weight:600; line-height:1.5; }
-
-    /* ─── Footer ─── */
-    .foot {
-        padding:14px 30px;
-        border-top:1px solid var(--line);
-        background:var(--bg2);
-        text-align:center;
-    }
-    .foot p { font-size:.76rem; color:var(--muted); }
-    .foot a { color:var(--brand); font-weight:800; text-decoration:none; }
-
-    /* ─── Shake error ─── */
-    .shake {
-        animation: shake .4s cubic-bezier(.36,.07,.19,.97);
-    }
-    @keyframes shake {
-        10%,90%  { transform:translateX(-2px); }
-        20%,80%  { transform:translateX(4px);  }
-        30%,50%,70% { transform:translateX(-5px); }
-        40%,60%  { transform:translateX(5px);  }
-    }
-
-    /* ─── Responsive ─── */
-    @media(max-width:460px){
-        .head  { padding:22px 20px 28px; }
-        .body  { padding:22px 18px 18px; }
-        .foot  { padding:12px 18px; }
-    }
-</style>
-```
-
+    <style>
+        :root {
+            --brand:      #2b3393;
+            --brand-deep: #1a1f5b;
+            --brand-mid:  #3d4ab5;
+            --gold:       #f8c81c;
+            --glow:       rgba(43,51,147,0.22);
+            --white:      #ffffff;
+            --bg2:        #f4f5ff;
+            --line:       #e2e4f3;
+            --ink:        #15193b;
+            --muted:      #7880b0;
+            --ok:         #059669;
+            --err:        #dc2626;
+        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px 16px;
+            background: var(--brand-deep);
+            overflow: hidden; position: relative;
+        }
+        .scene { position:fixed; inset:0; z-index:0; overflow:hidden; }
+        .scene-blob { position:absolute; border-radius:50%; filter:blur(90px); opacity:.12; }
+        .b1{width:550px;height:550px;background:var(--gold);top:-180px;right:-120px;animation:drift 9s ease-in-out infinite;}
+        .b2{width:450px;height:450px;background:var(--brand-mid);bottom:-130px;left:-80px;animation:drift 11s ease-in-out infinite reverse;}
+        .b3{width:250px;height:250px;background:#8891e0;top:50%;left:55%;animation:drift 7s ease-in-out infinite 2s;opacity:.08;}
+        @keyframes drift{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(20px,-25px) scale(1.04);}}
+        .grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:44px 44px;}
+        .star{position:fixed;border-radius:50%;background:#fff;opacity:0;animation:blink 4s ease-in-out infinite;}
+        .star:nth-child(1){width:3px;height:3px;top:12%;left:18%;animation-delay:0s;}
+        .star:nth-child(2){width:2px;height:2px;top:68%;left:82%;animation-delay:1.8s;}
+        .star:nth-child(3){width:4px;height:4px;top:38%;left:52%;animation-delay:3.2s;}
+        .star:nth-child(4){width:2px;height:2px;top:80%;left:28%;animation-delay:.9s;}
+        .star:nth-child(5){width:3px;height:3px;top:22%;left:73%;animation-delay:2.5s;}
+        @keyframes blink{0%,100%{opacity:0;transform:scale(.4);}50%{opacity:.6;transform:scale(1);}}
+        .card{position:relative;z-index:1;width:100%;max-width:420px;background:var(--white);border-radius:26px;overflow:hidden;box-shadow:0 50px 100px rgba(0,0,0,.42),0 0 0 1px rgba(255,255,255,.07) inset;animation:pop-in .65s cubic-bezier(.34,1.56,.64,1) both;}
+        @keyframes pop-in{from{opacity:0;transform:translateY(44px) scale(.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+        .head{background:linear-gradient(140deg,var(--brand) 0%,var(--brand-deep) 100%);padding:28px 30px 34px;position:relative;overflow:hidden;}
+        .head-ring1{position:absolute;border-radius:50%;width:240px;height:240px;border:1px solid rgba(255,255,255,.07);top:-90px;left:-70px;}
+        .head-ring2{position:absolute;border-radius:50%;width:160px;height:160px;border:1px solid rgba(248,200,28,.12);bottom:-60px;right:-40px;}
+        .head-dot{position:absolute;border-radius:50%;width:80px;height:80px;background:rgba(248,200,28,.07);top:10px;right:20px;}
+        .logo-row{display:flex;align-items:center;gap:13px;position:relative;z-index:2;margin-bottom:20px;}
+        .logo-img{width:50px;height:50px;border-radius:13px;object-fit:cover;border:2px solid rgba(255,255,255,.18);box-shadow:0 6px 18px rgba(0,0,0,.28);}
+        .logo-text h1{color:#fff;font-size:1.2rem;font-weight:900;line-height:1.15;}
+        .logo-text p{color:var(--gold);font-size:.75rem;font-weight:500;margin-top:1px;}
+        .head-copy{position:relative;z-index:2;}
+        .head-copy h2{color:#fff;font-size:1.5rem;font-weight:800;margin-bottom:4px;}
+        .head-copy p{color:rgba(255,255,255,.52);font-size:.85rem;line-height:1.5;}
+        .body{padding:28px 30px 22px;}
+        .info-badge{display:flex;align-items:center;gap:10px;background:#eef0ff;border:1px solid #d5d9ff;border-radius:12px;padding:11px 14px;margin-bottom:22px;}
+        .info-badge i{color:var(--brand);font-size:.9rem;flex-shrink:0;}
+        .info-badge p{font-size:.8rem;color:var(--brand);font-weight:600;line-height:1.5;}
+        .alert{display:none;align-items:flex-start;gap:9px;padding:12px 14px;border-radius:12px;font-size:.86rem;font-weight:700;margin-bottom:18px;}
+        .alert.show{display:flex;animation:slide-in .28s ease;}
+        .alert.err{background:#fef2f2;color:var(--err);border:1px solid #fecaca;}
+        .alert.ok{background:#f0fdf4;color:var(--ok);border:1px solid #bbf7d0;}
+        .alert i{margin-top:1px;flex-shrink:0;font-size:.85rem;}
+        @keyframes slide-in{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+        .fg{margin-bottom:16px;}
+        .fg label{display:block;font-size:.84rem;font-weight:800;color:var(--ink);margin-bottom:7px;letter-spacing:.2px;}
+        .fw{position:relative;}
+        .fw .ir{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:.88rem;color:var(--muted);pointer-events:none;transition:color .25s;}
+        .fw .il{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:.88rem;color:var(--muted);cursor:pointer;transition:color .2s;}
+        .fw .il:hover{color:var(--brand);}
+        .fw input{width:100%;padding:13px 42px 13px 42px;border:2px solid var(--line);border-radius:12px;font-family:'Tajawal',sans-serif;font-size:.93rem;color:var(--ink);background:var(--bg2);outline:none;transition:all .25s ease;}
+        .fw input:focus{border-color:var(--brand);background:#fff;box-shadow:0 0 0 4px var(--glow);}
+        .fw input:focus~.ir{color:var(--brand);}
+        .fw input::placeholder{color:#bdc2d8;font-size:.88rem;}
+        .phone-row{display:flex;gap:8px;}
+        .prefix{display:flex;align-items:center;gap:6px;padding:0 13px;background:var(--bg2);border:2px solid var(--line);border-radius:12px;font-size:.85rem;font-weight:800;color:var(--ink);white-space:nowrap;flex-shrink:0;transition:border-color .25s;}
+        .prefix .flag{font-size:1.1rem;}
+        .phone-row .fw{flex:1;}
+        .phone-row input{padding-right:14px;}
+        .meta-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;margin-top:-2px;}
+        .cb-wrap{display:flex;align-items:center;gap:7px;cursor:pointer;}
+        .cb-wrap input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:pointer;}
+        .cb-wrap span{font-size:.8rem;color:var(--muted);font-weight:600;}
+        .btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--brand) 0%,var(--brand-deep) 100%);color:#fff;border:none;border-radius:13px;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;position:relative;overflow:hidden;transition:all .3s ease;box-shadow:0 8px 26px var(--glow);letter-spacing:.3px;}
+        .btn::before{content:'';position:absolute;top:0;left:-110%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);transition:left .5s;}
+        .btn:hover::before{left:110%;}
+        .btn:hover{transform:translateY(-2px);box-shadow:0 14px 36px var(--glow);}
+        .btn:active{transform:translateY(0);}
+        .btn:disabled{background:linear-gradient(135deg,#8f96c6,#6870a6);cursor:not-allowed;transform:none;box-shadow:none;}
+        .btn-inner{display:flex;align-items:center;justify-content:center;gap:9px;}
+        .spin{width:19px;height:19px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .75s linear infinite;display:none;}
+        @keyframes spin{to{transform:rotate(360deg);}}
+        .sec-note{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#f9fafe,#f1f3ff);border:1px solid var(--line);border-radius:10px;padding:10px 13px;margin-top:16px;}
+        .sec-note i{color:var(--brand);font-size:.8rem;flex-shrink:0;}
+        .sec-note p{font-size:.75rem;color:var(--muted);font-weight:600;line-height:1.5;}
+        .foot{padding:14px 30px;border-top:1px solid var(--line);background:var(--bg2);text-align:center;}
+        .foot p{font-size:.76rem;color:var(--muted);}
+        .foot a{color:var(--brand);font-weight:800;text-decoration:none;}
+        .shake{animation:shake .4s cubic-bezier(.36,.07,.19,.97);}
+        @keyframes shake{10%,90%{transform:translateX(-2px);}20%,80%{transform:translateX(4px);}30%,50%,70%{transform:translateX(-5px);}40%,60%{transform:translateX(5px);}}
+        @media(max-width:460px){.head{padding:22px 20px 28px;}.body{padding:22px 18px 18px;}.foot{padding:12px 18px;}}
+    </style>
 </head>
 <body>
 
-```
-<!-- Background -->
 <div class="scene">
     <div class="b1 scene-blob"></div>
     <div class="b2 scene-blob"></div>
     <div class="b3 scene-blob"></div>
 </div>
 <div class="grid"></div>
-<div class="star"></div>
-<div class="star"></div>
-<div class="star"></div>
-<div class="star"></div>
-<div class="star"></div>
+<div class="star"></div><div class="star"></div><div class="star"></div>
+<div class="star"></div><div class="star"></div>
 
-<!-- Card -->
-<div class="card" id="card">
-
-    <!-- Header -->
+<div class="card">
     <div class="head">
         <div class="head-ring1"></div>
         <div class="head-ring2"></div>
         <div class="head-dot"></div>
-
         <div class="logo-row">
             <img class="logo-img"
                  src="https://i.ibb.co/qMCd3wgR/IMG-6048.jpg" alt="logo"
@@ -386,97 +132,82 @@
                 <p>إدارة المنتجات والطلبات</p>
             </div>
         </div>
-
         <div class="head-copy">
             <h2>أهلاً بك مجدداً 👋</h2>
-            <p>أدخل اسم المستخدم ورقم الجوال المسجّل للدخول</p>
+            <p>أدخل اسم المستخدم ورقم الجوال للدخول</p>
         </div>
     </div>
 
-    <!-- Body -->
-    <div class="body">
+```
+<div class="body">
+    <div class="info-badge">
+        <i class="fas fa-circle-info"></i>
+        <p>كلمة المرور هي <strong>رقم جوالك المسجّل</strong> في النظام</p>
+    </div>
 
-        <!-- Info -->
-        <div class="info-badge">
-            <i class="fas fa-circle-info"></i>
-            <p>كلمة المرور هي <strong>رقم جوالك المسجّل</strong> في النظام</p>
+    <div class="alert" id="alert"></div>
+
+    <div class="fg">
+        <label>اسم المستخدم</label>
+        <div class="fw">
+            <input type="text" id="username" placeholder="أدخل اسم المستخدم"
+                   autocomplete="username" spellcheck="false">
+            <i class="fas fa-user ir" id="userIco"></i>
         </div>
+    </div>
 
-        <!-- Alert -->
-        <div class="alert" id="alert"></div>
-
-        <!-- Username -->
-        <div class="fg">
-            <label>اسم المستخدم</label>
+    <div class="fg">
+        <label>رقم الجوال
+            <span style="color:var(--muted);font-weight:500;font-size:.78rem;">(كلمة المرور)</span>
+        </label>
+        <div class="phone-row">
+            <div class="prefix"><span class="flag">🇸🇦</span>+966</div>
             <div class="fw">
-                <input type="text" id="username"
-                       placeholder="أدخل اسم المستخدم"
-                       autocomplete="username"
-                       spellcheck="false">
-                <i class="fas fa-user ir" id="userIco"></i>
+                <input type="password" id="phone" placeholder="5XXXXXXXX"
+                       maxlength="9" inputmode="numeric" autocomplete="current-password">
+                <i class="fas fa-eye il" id="eyeBtn"></i>
             </div>
         </div>
-
-        <!-- Phone (password) -->
-        <div class="fg">
-            <label>رقم الجوال <span style="color:var(--muted);font-weight:500;font-size:.78rem;">(كلمة المرور)</span></label>
-            <div class="phone-row">
-                <div class="prefix">
-                    <span class="flag">🇸🇦</span>+966
-                </div>
-                <div class="fw">
-                    <input type="password" id="phone"
-                           placeholder="5XXXXXXXX"
-                           maxlength="9"
-                           inputmode="numeric"
-                           autocomplete="current-password">
-                    <i class="fas fa-eye il" id="eyeBtn" title="إظهار الرقم"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- Meta row -->
-        <div class="meta-row">
-            <label class="cb-wrap">
-                <input type="checkbox" id="rememberMe">
-                <span>تذكرني</span>
-            </label>
-            <span style="font-size:.75rem;color:var(--muted);">
-                <i class="fas fa-lock" style="margin-left:4px;"></i>دخول آمن
-            </span>
-        </div>
-
-        <!-- Submit -->
-        <button class="btn" id="loginBtn">
-            <div class="btn-inner">
-                <div class="spin" id="btnSpin"></div>
-                <span id="btnTxt"><i class="fas fa-right-to-bracket"></i> &nbsp;تسجيل الدخول</span>
-            </div>
-        </button>
-
-        <!-- Security note -->
-        <div class="sec-note">
-            <i class="fas fa-shield-halved"></i>
-            <p>بياناتك محمية ولا تُشارك مع أي طرف ثالث. يُرجى عدم مشاركة رقم جوالك مع أحد.</p>
-        </div>
-
     </div>
 
-    <!-- Footer -->
-    <div class="foot">
-        <p>تم التطوير بواسطة <a href="#">دوائر</a> &nbsp;•&nbsp; جميع الحقوق محفوظة © 2025</p>
+    <div class="meta-row">
+        <label class="cb-wrap">
+            <input type="checkbox" id="rememberMe">
+            <span>تذكرني</span>
+        </label>
+        <span style="font-size:.75rem;color:var(--muted);">
+            <i class="fas fa-lock" style="margin-left:4px;"></i>دخول آمن
+        </span>
+    </div>
+
+    <button class="btn" id="loginBtn">
+        <div class="btn-inner">
+            <div class="spin" id="btnSpin"></div>
+            <span id="btnTxt"><i class="fas fa-right-to-bracket"></i> &nbsp;تسجيل الدخول</span>
+        </div>
+    </button>
+
+    <div class="sec-note">
+        <i class="fas fa-shield-halved"></i>
+        <p>بياناتك محمية. الكتابة في النظام متاحة لأصحاب الحسابات المسجّلة فقط.</p>
     </div>
 </div>
 
+<div class="foot">
+    <p>تم التطوير بواسطة <a href="#">دوائر</a> &nbsp;•&nbsp; جميع الحقوق محفوظة © 2025</p>
+</div>
+```
 
-<!-- ══════════════ Firebase ══════════════ -->
+</div>
+
 <script type="module">
     import { initializeApp }
         from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getFirestore, collection, query, where, getDocs }
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword }
+        from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs, doc, updateDoc }
         from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-    /* ── Config ── */
     const app = initializeApp({
         apiKey:            "AIzaSyARoaXISEB8yiCmes_EmZLhb-8ZtbwOR-k",
         authDomain:        "dmorinig-f29d9.firebaseapp.com",
@@ -485,7 +216,9 @@
         messagingSenderId: "813644062004",
         appId:             "1:813644062004:web:e822278f6ee5f2f6f05961"
     });
-    const db = getFirestore(app);
+
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
 
     /* ── Elements ── */
     const usernameEl = document.getElementById('username');
@@ -497,69 +230,72 @@
     const eyeBtn     = document.getElementById('eyeBtn');
     const rememberMe = document.getElementById('rememberMe');
 
-    /* ── Show/Hide phone number ── */
+    /* ── Show/Hide ── */
     eyeBtn.addEventListener('click', () => {
         const isHidden = phoneEl.type === 'password';
         phoneEl.type   = isHidden ? 'tel' : 'password';
         eyeBtn.className = `fas fa-${isHidden ? 'eye-slash' : 'eye'} il`;
     });
 
-    /* ── Alert helper ── */
+    /* ── Alert ── */
     function showAlert(msg, type = 'err') {
         alertEl.className = `alert show ${type}`;
-        alertEl.innerHTML = `<i class="fas ${type === 'ok'
+        alertEl.innerHTML = `<i class="fas ${type==='ok'
             ? 'fa-circle-check' : 'fa-triangle-exclamation'}"></i>${msg}`;
         if (type === 'ok') setTimeout(() => alertEl.classList.remove('show'), 5000);
     }
 
-    /* ── Loading state ── */
+    /* ── Loading ── */
     function setLoading(on) {
-        loginBtn.disabled      = on;
-        btnSpin.style.display  = on ? 'block' : 'none';
+        loginBtn.disabled     = on;
+        btnSpin.style.display = on ? 'block' : 'none';
         if (!on) btnTxt.innerHTML = '<i class="fas fa-right-to-bracket"></i> &nbsp;تسجيل الدخول';
     }
 
-    /* ── Normalize phone: strip leading 0, spaces ── */
+    /* ── Normalize phone ── */
     function normalizePhone(raw) {
-        return raw.replace(/\s/g, '').replace(/^0/, '');
+        return raw.replace(/\s/g,'').replace(/^0/,'');
     }
 
-    /* ══════════════════════════════════════════
-       MAIN LOGIN  — Firestore only, no Auth SDK
-       ══════════════════════════════════════════ */
+    /* ── Shake ── */
+    function shake(el) {
+        el.classList.remove('shake');
+        void el.offsetWidth;
+        el.classList.add('shake');
+        el.addEventListener('animationend', () => el.classList.remove('shake'), { once:true });
+    }
+
+    /* ══════════════════════════════════════════════════════
+       LOGIN FLOW:
+       1. تحقق من username + phone في Firestore
+       2. إذا صح → سجّل دخول Firebase Auth (أو أنشئ حساب تلقائي)
+       3. Firebase Auth token يُستخدم في Firestore Rules
+    ══════════════════════════════════════════════════════ */
     async function doLogin() {
         alertEl.classList.remove('show');
 
         const username = usernameEl.value.trim();
         const phone    = normalizePhone(phoneEl.value.trim());
 
-        /* Basic validation */
         if (!username) {
             showAlert('يرجى إدخال اسم المستخدم');
-            usernameEl.focus();
             shake(usernameEl.closest('.fw'));
+            usernameEl.focus();
             return;
         }
         if (!phone || phone.length < 9) {
             showAlert('يرجى إدخال رقم الجوال كاملاً (9 أرقام)');
-            phoneEl.focus();
             shake(phoneEl.closest('.fw'));
+            phoneEl.focus();
             return;
         }
 
         setLoading(true);
 
         try {
-            /*
-             * Query Firestore: users collection
-             * Document must have: { username, phone }
-             * phone stored as "5XXXXXXXX"  (without +966 or leading 0)
-             */
+            /* ── Step 1: تحقق من Firestore ── */
             const snap = await getDocs(
-                query(
-                    collection(db, 'users'),
-                    where('username', '==', username)
-                )
+                query(collection(db, 'users'), where('username', '==', username))
             );
 
             if (snap.empty) {
@@ -568,7 +304,8 @@
                 return;
             }
 
-            const userData = snap.docs[0].data();
+            const docSnap  = snap.docs[0];
+            const userData = docSnap.data();
             const storedPhone = normalizePhone(String(userData.phone || ''));
 
             if (storedPhone !== phone) {
@@ -577,59 +314,72 @@
                 return;
             }
 
-            /* ✅ Match found — save session */
+            /* ── Step 2: Firebase Auth ──
+               نستخدم إيميل وهمي مبني من username@app.local
+               وكلمة المرور = رقم الجوال
+               هذا يعطينا token حقيقي لـ Firestore Rules
+            ── */
+            const fakeEmail = `${username.toLowerCase()}@dmorinig.app`;
+            const password  = phone; // رقم الجوال هو كلمة المرور
+
+            let userCredential;
+            try {
+                // حاول تسجيل الدخول أولاً
+                userCredential = await signInWithEmailAndPassword(auth, fakeEmail, password);
+            } catch (authErr) {
+                if (authErr.code === 'auth/user-not-found' ||
+                    authErr.code === 'auth/invalid-credential') {
+                    // أول مرة: أنشئ حساب Auth تلقائياً
+                    userCredential = await createUserWithEmailAndPassword(auth, fakeEmail, password);
+                    // احفظ uid في Firestore للمرجعية
+                    await updateDoc(doc(db, 'users', docSnap.id), {
+                        uid: userCredential.user.uid
+                    });
+                } else {
+                    throw authErr;
+                }
+            }
+
+            /* ── Step 3: حفظ الجلسة ── */
             showAlert('تم تسجيل الدخول بنجاح! جاري التحويل...', 'ok');
 
             const store = rememberMe.checked ? localStorage : sessionStorage;
             store.setItem('isLoggedIn', 'true');
-            store.setItem('userId',     snap.docs[0].id);
+            store.setItem('userId',     userCredential.user.uid);
             store.setItem('username',   userData.username || '');
             store.setItem('userPhone',  userData.phone    || '');
-            // Store any extra fields you have (name, role, etc.)
-            if (userData.name)  store.setItem('userName', userData.name);
-            if (userData.role)  store.setItem('userRole', userData.role);
+            store.setItem('userName',   userData.name     || '');
+            store.setItem('userRole',   userData.role     || '');
 
             setTimeout(() => { window.location.href = 'dashboard.html'; }, 1600);
 
         } catch (e) {
             console.error(e);
-            if (e.code === 'permission-denied') {
-                showAlert('لا يوجد صلاحية للوصول. تحقق من قواعد Firestore');
-            } else if (e.code === 'unavailable' || e.message?.includes('network')) {
-                showAlert('خطأ في الاتصال بالشبكة. تحقق من الإنترنت');
-            } else {
-                showAlert('حدث خطأ غير متوقع: ' + e.message);
-            }
+            const map = {
+                'auth/too-many-requests':      'تم تجميد الحساب مؤقتاً بسبب محاولات متعددة',
+                'auth/network-request-failed': 'خطأ في الاتصال بالشبكة',
+                'permission-denied':           'لا توجد صلاحية للوصول',
+            };
+            showAlert(map[e.code] || 'حدث خطأ: ' + e.message);
         } finally {
             setLoading(false);
         }
     }
 
-    /* ── Shake animation ── */
-    function shake(el) {
-        el.classList.remove('shake');
-        void el.offsetWidth; // reflow
-        el.classList.add('shake');
-        el.addEventListener('animationend', () => el.classList.remove('shake'), { once: true });
-    }
-
     /* ── Events ── */
     loginBtn.addEventListener('click', doLogin);
-    usernameEl.addEventListener('keydown', e => { if (e.key === 'Enter') phoneEl.focus(); });
-    phoneEl.addEventListener('keydown',    e => { if (e.key === 'Enter') doLogin(); });
-
-    /* Only allow digits in phone field */
+    usernameEl.addEventListener('keydown', e => { if (e.key==='Enter') phoneEl.focus(); });
+    phoneEl.addEventListener('keydown',    e => { if (e.key==='Enter') doLogin(); });
     phoneEl.addEventListener('input', () => {
-        phoneEl.value = phoneEl.value.replace(/\D/g, '');
+        phoneEl.value = phoneEl.value.replace(/\D/g,'');
     });
 
-    /* ── Auto redirect if already logged in ── */
+    /* ── Auto redirect ── */
     if (localStorage.getItem('isLoggedIn')   === 'true' ||
         sessionStorage.getItem('isLoggedIn') === 'true') {
         window.location.href = 'dashboard.html';
     }
 </script>
-```
 
 </body>
 </html>
