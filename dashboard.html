@@ -3,7 +3,6 @@
 <html lang="ar" dir="rtl">
 <head>
 <script>
-    // ✅ التحقق من تسجيل الدخول أولاً
     const _li = localStorage.getItem('isLoggedIn') === 'true' || sessionStorage.getItem('isLoggedIn') === 'true';
     if (!_li) { window.location.href = 'login.html'; }
     let logoutTimer;
@@ -99,6 +98,7 @@
         .btn-primary{background:var(--main);color:white}.btn-primary:hover{background:var(--main-light);transform:translateY(-1px);box-shadow:0 6px 20px rgba(43,51,147,.22)}
         .btn-secondary{background:var(--secondary);color:var(--main)}.btn-secondary:hover{background:var(--secondary-dark);transform:translateY(-1px);box-shadow:0 6px 18px rgba(248,200,28,.3)}
         .btn-ghost{background:var(--light-bg);color:#666}.btn-ghost:hover{background:#e0e3f0;color:var(--main)}
+        .btn-sm{padding:7px 14px;font-size:.8rem}
         .btn-full{width:100%}.btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
         .img-type-btns{display:flex;gap:8px;margin-bottom:9px}
         .img-type-btn{flex:1;padding:8px;border-radius:8px;border:2px solid #eef0ff;background:white;cursor:pointer;font-size:.8rem;font-weight:700;color:#999;transition:var(--transition);font-family:'Cairo',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px}
@@ -150,6 +150,7 @@
         .action-btn{width:30px;height:30px;border-radius:7px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.82rem;transition:var(--transition)}
         .action-edit{background:#eef0ff;color:var(--main)}.action-edit:hover{background:var(--main);color:white}
         .action-delete{background:#ffebee;color:#c62828}.action-delete:hover{background:#c62828;color:white}
+        .action-copy{background:#fff8e0;color:#b8860b}.action-copy:hover{background:#b8860b;color:white}
         .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,10,40,.55);backdrop-filter:blur(5px);z-index:2000;align-items:center;justify-content:center;padding:18px}
         .modal-content{background:white;padding:26px;border-radius:20px;max-width:510px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(43,51,147,.18);animation:modalIn .28s ease}
         @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
@@ -190,16 +191,73 @@
         .default-tag{font-size:.7rem;color:#bbb;background:#eee;padding:2px 7px;border-radius:20px;margin-right:5px}
         .tab-content{display:none;animation:fadeTab .28s ease}.tab-content.active{display:block}
         @keyframes fadeTab{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
-        /* ✅ Pagination styles */
         .pagination-bar{display:flex;align-items:center;justify-content:center;gap:6px;padding:14px 0 4px;flex-wrap:wrap}
         .page-btn{padding:6px 13px;border:2px solid #eef0ff;border-radius:20px;background:white;font-size:.79rem;font-weight:700;color:#999;cursor:pointer;transition:var(--transition);font-family:'Cairo',sans-serif}
         .page-btn:hover{border-color:var(--main);color:var(--main)}
         .page-btn.active{background:var(--main);color:white;border-color:var(--main)}
         .page-btn:disabled{opacity:.4;cursor:not-allowed}
         .page-info{font-size:.78rem;color:#aaa;font-weight:600}
-        /* ✅ Auth status badge */
         .auth-status{display:flex;align-items:center;gap:6px;font-size:.75rem;padding:4px 10px;border-radius:20px;font-weight:700}
         .auth-ok{background:#e8f5e9;color:#2e7d32}.auth-fail{background:#ffebee;color:#c62828}
+        /* ✅ NEW: Bulk bar */
+        .bulk-bar{display:none;align-items:center;gap:9px;padding:10px 14px;background:#fff3cd;border:2px solid #ffc107;border-radius:var(--radius-sm);margin-bottom:12px;flex-wrap:wrap}
+        .bulk-bar.show{display:flex}
+        .bulk-count{font-weight:700;color:#856404;font-size:.88rem}
+        .bulk-actions{display:flex;gap:7px;margin-right:auto;flex-wrap:wrap;align-items:center}
+        /* ✅ NEW: Activity log */
+        .activity-item{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid #f0f2fc}
+        .activity-item:last-child{border:none}
+        .activity-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0}
+        .activity-icon.add{background:#e8f5e9;color:#2e7d32}
+        .activity-icon.edit{background:#eef0ff;color:var(--main)}
+        .activity-icon.delete{background:#ffebee;color:#c62828}
+        .activity-icon.toggle{background:#fff8e0;color:#b8860b}
+        .activity-text{flex:1}
+        .activity-title{font-weight:700;font-size:.86rem;color:#333}
+        .activity-time{font-size:.72rem;color:#bbb}
+        /* ✅ NEW: Import/Export */
+        .import-drop-zone{border:2px dashed #d0d5f0;border-radius:var(--radius-sm);padding:24px;text-align:center;background:#f8faff;cursor:pointer;transition:var(--transition)}
+        .import-drop-zone:hover,.import-drop-zone.dragover{border-color:var(--main);background:#eef0ff}
+        .import-drop-zone i{font-size:1.8rem;color:var(--main);margin-bottom:8px;display:block}
+        .progress-bar-wrap{background:#f0f2fc;border-radius:10px;height:8px;overflow:hidden;margin-top:10px}
+        .progress-bar{height:100%;background:linear-gradient(90deg,var(--main),var(--secondary));border-radius:10px;transition:width .4s ease;width:0}
+        .progress-text{font-size:.78rem;color:#999;margin-top:5px;font-weight:600}
+        .import-progress{display:none;margin-top:10px}
+        /* ✅ NEW: Working hours */
+        .hours-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f2fc}
+        .hours-row:last-child{border:none}
+        .day-name{width:90px;font-weight:700;font-size:.85rem;color:var(--main)}
+        .hours-inputs{display:flex;gap:8px;align-items:center;flex:1}
+        .hours-inputs input{width:100px;padding:7px 10px;border:2px solid #eef0ff;border-radius:8px;font-size:.83rem;font-family:'Cairo',sans-serif;text-align:center}
+        .hours-inputs input:focus{outline:none;border-color:var(--main)}
+        .hours-sep{color:#bbb;font-size:.85rem}
+        .day-closed{display:flex;align-items:center;gap:6px;font-size:.8rem;color:#999}
+        /* ✅ Multi-Banner */
+        .banner-preview{background:linear-gradient(135deg,var(--main),var(--main-light));border-radius:var(--radius-sm);padding:0;color:white;text-align:center;margin-bottom:14px;min-height:80px;display:flex;flex-direction:column;align-items:stretch;justify-content:center;position:relative;overflow:hidden}
+        .banner-preview::before{content:'';position:absolute;top:-20px;right:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.07);pointer-events:none}
+        .banner-preview .bp-title{font-size:1.05rem;font-weight:800;position:relative;z-index:1}
+        .banner-preview .bp-sub{font-size:.8rem;opacity:.8;position:relative;z-index:1}
+        .banner-preview .bp-img{width:100%;max-height:120px;object-fit:cover;display:block;border-radius:var(--radius-sm)}
+        .banner-preview .bp-text-wrap{padding:14px 18px;display:flex;flex-direction:column;align-items:center;gap:5px}
+        .banner-counter{font-size:.7rem;opacity:.55;margin-top:4px;position:relative;z-index:1}
+        .banner-item-has-img{background:linear-gradient(135deg,#eef0ff,#f5f6fc)}
+        .banner-img-thumb{width:50px;height:34px;border-radius:6px;object-fit:cover;border:2px solid #eef0ff;flex-shrink:0}
+        .banner-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+        .banner-item{display:flex;align-items:center;gap:10px;padding:11px 13px;background:white;border-radius:var(--radius-sm);border:2px solid #eef0ff;transition:var(--transition)}
+        .banner-item:hover{border-color:rgba(43,51,147,.15);background:#fafbff}
+        .banner-item.banner-inactive{opacity:.55}
+        .banner-item-preview{flex:1;min-width:0}
+        .banner-item-title{font-weight:700;font-size:.86rem;color:var(--main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .banner-item-sub{font-size:.75rem;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .banner-item-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+        .banner-add-form{background:#f8faff;border:2px dashed #d0d5f0;border-radius:var(--radius-sm);padding:14px;margin-bottom:12px}
+        /* ✅ NEW: System info */
+        .backup-status{display:flex;align-items:center;gap:7px;padding:9px 14px;border-radius:var(--radius-sm);font-size:.82rem;font-weight:700}
+        .backup-ok{background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9}
+        .backup-warn{background:#fff8e0;color:#b8860b;border:1px solid #ffe082}
+        /* ✅ NEW: Quick actions */
+        .quick-action-box{text-align:center;cursor:pointer;transition:var(--transition);border:2px solid #eef0ff}
+        .quick-action-box:hover{border-color:var(--main) !important}
         @media(max-width:1100px){.dashboard-stats{grid-template-columns:repeat(2,1fr)}.chart-grid{grid-template-columns:1fr}}
         @media(max-width:768px){
             :root{--sidebar-width:66px}
@@ -215,7 +273,6 @@
         @media(max-width:480px){.main-content{padding:12px}.dashboard-stats{grid-template-columns:1fr}.page-title{font-size:1.05rem}}
     </style>
 
-```
 <script type="module">
     import { initializeApp }    from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
@@ -234,9 +291,6 @@
     const db   = getFirestore(app);
     window.db  = db;
 
-    // ══════════════════════════════════════════════
-    // ✅ التحقق من Firebase Auth عند كل عملية كتابة
-    // ══════════════════════════════════════════════
     let currentUser = null;
     onAuthStateChanged(auth, user => {
         currentUser = user;
@@ -258,50 +312,34 @@
         return true;
     }
 
-    // ══════════════════════════════════════════
-    // ✅ كاش البيانات (يُقلل القراءات)
-    // ══════════════════════════════════════════
-    const CACHE_TTL = 5 * 60 * 1000; // 5 دقائق
+    // ══ Cache ══
+    const CACHE_TTL = 5 * 60 * 1000;
     const _cache = {};
-
     async function cachedGet(colName) {
         const now = Date.now();
-        if (_cache[colName] && (now - _cache[colName].time) < CACHE_TTL) {
-            return _cache[colName].data;
-        }
+        if (_cache[colName] && (now - _cache[colName].time) < CACHE_TTL) return _cache[colName].data;
         const snap = await getDocs(collection(db, colName));
         const data = [];
         snap.forEach(d => data.push({ id: d.id, ...d.data() }));
         _cache[colName] = { data, time: now };
         return data;
     }
+    function invalidateCache(c) { delete _cache[c]; }
 
-    function invalidateCache(colName) {
-        delete _cache[colName];
-    }
-
-    // ══════════════════════════════════════════
-    // ✅ Pagination
-    // ══════════════════════════════════════════
+    // ══ Pagination ══
     const PAGE_SIZE = 15;
-    let currentPage = 1;
-    let filteredProducts = [];
-
+    let currentPage = 1, filteredProducts = [];
     function renderPage() {
         const start = (currentPage - 1) * PAGE_SIZE;
-        const pageData = filteredProducts.slice(start, start + PAGE_SIZE);
-        updateProductsTable(pageData);
+        updateProductsTable(filteredProducts.slice(start, start + PAGE_SIZE));
         renderPagination();
     }
-
     function renderPagination() {
         const bar = document.getElementById('paginationBar');
         if (!bar) return;
         const total = Math.ceil(filteredProducts.length / PAGE_SIZE);
         if (total <= 1) { bar.innerHTML = ''; return; }
-        let html = `<button class="page-btn" onclick="changePage(${currentPage-1})" ${currentPage===1?'disabled':''}>
-                        <i class="fas fa-chevron-right"></i>
-                    </button>`;
+        let html = `<button class="page-btn" onclick="changePage(${currentPage-1})" ${currentPage===1?'disabled':''}><i class="fas fa-chevron-right"></i></button>`;
         for (let i = 1; i <= total; i++) {
             if (total > 7 && i > 2 && i < total - 1 && Math.abs(i - currentPage) > 1) {
                 if (i === 3 || i === total - 2) html += `<span class="page-info">...</span>`;
@@ -309,27 +347,36 @@
             }
             html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="changePage(${i})">${i}</button>`;
         }
-        html += `<button class="page-btn" onclick="changePage(${currentPage+1})" ${currentPage===total?'disabled':''}>
-                     <i class="fas fa-chevron-left"></i>
-                 </button>`;
+        html += `<button class="page-btn" onclick="changePage(${currentPage+1})" ${currentPage===total?'disabled':''}><i class="fas fa-chevron-left"></i></button>`;
         html += `<span class="page-info">${filteredProducts.length} منتج</span>`;
         bar.innerHTML = html;
     }
-
     window.changePage = function(p) {
         const total = Math.ceil(filteredProducts.length / PAGE_SIZE);
         if (p < 1 || p > total) return;
-        currentPage = p;
-        renderPage();
+        currentPage = p; renderPage();
         document.getElementById('products-tab')?.scrollIntoView({ behavior:'smooth', block:'start' });
     };
 
-    // ═══════════════ DATA ═══════════════
+    // ══ State ══
     let products=[], categories=[], visitorsData=[], productsViews={};
     let currentSearch='', currentCat='all', currentStatus='all';
     let visitorsChart=null, donutChart=null;
     let offerSettings={ visible:true, badge:'✨ أصنافنا الرمضانية ✨', title:'طعم السعادة .. على سفرتك ويكمل جمعتك', featuredProducts:[] };
     let socialSettings={ whatsapp:'', instagram:'', tiktok:'', snapchat:'' };
+    let selectedProducts = new Set();
+    // ✅ Activity log (in memory)
+    let activityLog = [];
+
+    let workingHours = {
+        'الأحد':    {open:'08:00',close:'14:00',hasPeriod2:false,open2:'17:00',close2:'23:00',closed:false},
+        'الإثنين':  {open:'08:00',close:'14:00',hasPeriod2:false,open2:'17:00',close2:'23:00',closed:false},
+        'الثلاثاء': {open:'08:00',close:'14:00',hasPeriod2:false,open2:'17:00',close2:'23:00',closed:false},
+        'الأربعاء': {open:'08:00',close:'14:00',hasPeriod2:false,open2:'17:00',close2:'23:00',closed:false},
+        'الخميس':   {open:'08:00',close:'14:00',hasPeriod2:false,open2:'17:00',close2:'23:00',closed:false},
+        'الجمعة':   {open:'12:00',close:'14:00',hasPeriod2:false,open2:'17:00',close2:'23:00',closed:false},
+        'السبت':    {open:'08:00',close:'14:00',hasPeriod2:false,open2:'17:00',close2:'23:00',closed:false}
+    };
 
     const defaultCategories = [
         {id:'sauces',name:'الصوصات',nameEn:'Sauces',isDefault:true},
@@ -349,6 +396,26 @@
         t.className = `toast-message show ${type}`;
         setTimeout(() => t.className='toast-message', 3500);
     };
+
+    // ✅ Activity log helpers
+    function addActivity(type, title) {
+        const now = new Date();
+        const time = now.toLocaleTimeString('ar', {hour:'2-digit', minute:'2-digit'});
+        activityLog.unshift({ type, title, time });
+        if (activityLog.length > 20) activityLog.pop();
+        renderActivityLog();
+    }
+    function renderActivityLog() {
+        const list = document.getElementById('activityLogList');
+        if (!list) return;
+        if (!activityLog.length) { list.innerHTML='<div class="empty-state"><i class="fas fa-history"></i><p>لا توجد أنشطة بعد</p></div>'; return; }
+        const icons = {add:'fa-plus',edit:'fa-pen',delete:'fa-trash',toggle:'fa-toggle-on'};
+        list.innerHTML = activityLog.slice(0,10).map(a=>`
+            <div class="activity-item">
+                <div class="activity-icon ${a.type}"><i class="fas ${icons[a.type]||'fa-circle'}"></i></div>
+                <div class="activity-text"><div class="activity-title">${a.title}</div><div class="activity-time">${a.time}</div></div>
+            </div>`).join('');
+    }
 
     async function loadVisitorsData() {
         try {
@@ -460,7 +527,6 @@
     }
 
     window.toggleFeaturedProductVisibility = (i,v) => { if(offerSettings.featuredProducts[i]) offerSettings.featuredProducts[i].visible=v; };
-
     window.editFeaturedProduct = function(i) {
         const p = offerSettings.featuredProducts[i];
         const $ = id=>document.getElementById(id);
@@ -469,16 +535,14 @@
         $('featuredProductDesc').value=p.desc||''; $('featuredProductWhatsapp').value=p.whatsapp||'';
         $('addFeaturedProductBtn').innerHTML='<i class="fas fa-check"></i> تحديث المنتج';
     };
-
     window.deleteFeaturedProduct = async function(i) {
         if (!confirm('هل أنت متأكد من الحذف؟')) return;
-        if (!requireAuth()) return; // ✅ تحقق Auth
+        if (!requireAuth()) return;
         offerSettings.featuredProducts.splice(i,1);
         await saveOfferSettings(); renderFeaturedProductsList();
     };
-
     async function saveOfferSettings() {
-        if (!requireAuth()) return; // ✅ تحقق Auth
+        if (!requireAuth()) return;
         const $ = id=>document.getElementById(id);
         const btn = $('saveOfferBtn');
         if (btn) { btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...'; }
@@ -490,9 +554,8 @@
         } catch(e) { showToast('فشل حفظ الإعدادات: '+e.message,'error'); }
         finally { if(btn) { btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> حفظ جميع التغييرات'; } }
     }
-
     window.addFeaturedProduct = async function() {
-        if (!requireAuth()) return; // ✅ تحقق Auth
+        if (!requireAuth()) return;
         const $ = id=>document.getElementById(id);
         const name=$('featuredProductName').value.trim(), price=$('featuredProductPrice').value.trim(), image=$('featuredProductImageUrl').value.trim();
         if (!name||!price||!image) { showToast('الرجاء إدخال الاسم والسعر والصورة','error'); return; }
@@ -517,9 +580,8 @@
             if($('socialSnapchat')) $('socialSnapchat').value=socialSettings.snapchat||'';
         } catch(e) { console.error(e); }
     }
-
     async function saveSocialSettings() {
-        if (!requireAuth()) return; // ✅ تحقق Auth
+        if (!requireAuth()) return;
         const btn = document.getElementById('saveSocialBtn');
         if (btn) { btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...'; }
         try {
@@ -534,15 +596,13 @@
 
     async function loadCategories() {
         try {
-            // ✅ استخدام الكاش
             const custom = await cachedGet('categories');
             categories = [...defaultCategories,...custom.map(c=>({...c,isDefault:false}))].sort((a,b)=>{ if(a.isDefault&&!b.isDefault)return -1; if(!a.isDefault&&b.isDefault)return 1; return (a.order||0)-(b.order||0); });
             updateCategorySelects(); renderCategoriesTable(); updateDashboardStats();
         } catch(e) { categories=[...defaultCategories]; updateCategorySelects(); renderCategoriesTable(); }
     }
-
     function updateCategorySelects() {
-        ['productCategory','filterCategory','editProductCategory'].forEach(id=>{
+        ['productCategory','filterCategory','editProductCategory','bulkMoveCategory'].forEach(id=>{
             const sel=document.getElementById(id);
             if(!sel) return;
             const cur=sel.value;
@@ -550,7 +610,6 @@
             categories.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=c.name; if(c.id===cur) o.selected=true; sel.appendChild(o); });
         });
     }
-
     function renderCategoriesTable() {
         const tbody=document.getElementById('categoriesTableBody');
         if (!tbody) return;
@@ -561,9 +620,8 @@
                 : `<tr><td>${i+1}</td><td>${c.name}</td><td>${c.nameEn||'---'}</td><td><span class="cat-tag">${count} منتج</span></td><td>${c.order||0}</td><td><div class="action-btns"><button class="action-btn action-edit" onclick="openEditCategoryModal('${c.id}')"><i class="fas fa-edit"></i></button><button class="action-btn action-delete" onclick="deleteCategory('${c.id}')"><i class="fas fa-trash"></i></button></div></td></tr>`;
         }).join('');
     }
-
     window.deleteCategory = async function(id) {
-        if (!requireAuth()) return; // ✅ تحقق Auth
+        if (!requireAuth()) return;
         if (!confirm('هل أنت متأكد من حذف هذا القسم؟')) return;
         try {
             const q2=query(collection(db,"products"),where("category","==",id));
@@ -573,12 +631,12 @@
                 snap.forEach(async d=>await updateDoc(doc(db,"products",d.id),{category:defaultCategories[0].id}));
             }
             await deleteDoc(doc(db,"categories",id));
-            invalidateCache('categories'); // ✅ مسح الكاش
+            invalidateCache('categories');
+            addActivity('delete',`حذف قسم: ${categories.find(c=>c.id===id)?.name||id}`);
             showToast('تم حذف القسم بنجاح','success');
             await loadCategories(); await loadProducts();
         } catch(e) { showToast('فشل حذف القسم','error'); }
     };
-
     window.openEditCategoryModal = function(id) {
         const c=categories.find(x=>x.id===id);
         if (!c||c.isDefault) { showToast('لا يمكن تعديل الأقسام الافتراضية','warning'); return; }
@@ -589,29 +647,28 @@
 
     async function loadProducts() {
         try {
-            // ✅ استخدام الكاش
             const data = await cachedGet('products');
             products = data.sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
-            currentPage = 1; // إعادة للصفحة الأولى
+            currentPage = 1;
             updateDisplay(); updateDashboardStats(); updateTopProducts();
             const badge=document.getElementById('productsBadge');
             if(badge) badge.textContent=products.length;
         } catch(e) { console.error(e); }
     }
-
     async function toggleProductStatus(id,cur) {
-        if (!requireAuth()) return; // ✅ تحقق Auth
+        if (!requireAuth()) return;
         const ns=cur==='active'?'inactive':'active';
         try {
             await updateDoc(doc(db,"products",id),{status:ns,updatedAt:new Date().toISOString()});
-            invalidateCache('products'); // ✅ مسح الكاش
+            invalidateCache('products');
             const idx=products.findIndex(p=>p.id===id);
             if(idx!==-1) products[idx].status=ns;
             applyFilters(); updateDashboardStats(); updateDonutChart();
+            const pName = products.find(p=>p.id===id)?.name||'منتج';
+            addActivity('toggle',`${ns==='active'?'إظهار':'إخفاء'}: ${pName}`);
             showToast(`تم ${ns==='active'?'إظهار':'إخفاء'} المنتج`,'success');
         } catch(e) { showToast('فشل تحديث الحالة','error'); }
     }
-
     function applyFilters() {
         let f=products;
         if(currentCat!=='all') f=f.filter(p=>p.category===currentCat);
@@ -619,11 +676,11 @@
         if(currentSearch.trim()) { const t=currentSearch.trim().toLowerCase(); f=f.filter(p=>p.name.toLowerCase().includes(t)||(p.desc&&p.desc.toLowerCase().includes(t))); }
         filteredProducts = f;
         currentPage = 1;
-        renderPage(); // ✅ Pagination
+        renderPage();
         const cnt=document.getElementById('filteredCount');
         if(cnt) cnt.textContent=`${f.length} من ${products.length} منتج`;
+        selectedProducts.clear(); updateBulkBar();
     }
-
     function updateDashboardStats() {
         const $=id=>document.getElementById(id);
         const active=products.filter(p=>p.status!=='inactive').length;
@@ -632,7 +689,6 @@
         if($('totalProducts')) $('totalProducts').textContent=products.length;
         if($('totalCategories')) $('totalCategories').textContent=categories.length;
     }
-
     window.openEditProductModal = function(id) {
         const p=products.find(x=>x.id===id);
         if(!p) return;
@@ -648,49 +704,127 @@
         $('editUrlOptionBtn').classList.add('active'); $('editFileOptionBtn').classList.remove('active');
         $('editProductModal').style.display='flex';
     };
-
     async function updateProduct(id,data) {
-        if (!requireAuth()) return {success:false, error:'غير مصادق'}; // ✅ تحقق Auth
+        if (!requireAuth()) return {success:false, error:'غير مصادق'};
         try {
             await updateDoc(doc(db,"products",id),data);
-            invalidateCache('products'); // ✅ مسح الكاش
+            invalidateCache('products');
             return {success:true};
         } catch(e) { return {success:false,error:e.message}; }
     }
-
     window.closeModal = id=>document.getElementById(id).style.display='none';
-
     window.deleteProduct = async function(id) {
-        if (!requireAuth()) return; // ✅ تحقق Auth
+        if (!requireAuth()) return;
         if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
         try {
+            const pName = products.find(p=>p.id===id)?.name||'منتج';
             await deleteDoc(doc(db,"products",id));
-            invalidateCache('products'); // ✅ مسح الكاش
+            invalidateCache('products');
+            addActivity('delete',`حذف منتج: ${pName}`);
             showToast('تم حذف المنتج بنجاح','success');
             await loadProducts();
         } catch(e) { showToast('فشل حذف المنتج','error'); }
     };
-
     window.toggleStatus = (id,cur)=>toggleProductStatus(id,cur);
+
+    // ✅ Bulk selection
+    window.toggleSelectProduct = function(id, checked) {
+        if(checked) selectedProducts.add(id); else selectedProducts.delete(id);
+        updateBulkBar();
+    };
+    window.selectAllProducts = function(checked) {
+        filteredProducts.forEach(p=>{ if(checked) selectedProducts.add(p.id); else selectedProducts.delete(p.id); });
+        document.querySelectorAll('.prod-checkbox').forEach(cb=>cb.checked=checked);
+        updateBulkBar();
+    };
+    function updateBulkBar() {
+        const bar=document.getElementById('bulkBar');
+        const cnt=document.getElementById('bulkSelectedCount');
+        if(!bar) return;
+        if(selectedProducts.size>0){bar.classList.add('show');if(cnt)cnt.textContent=`${selectedProducts.size} منتج محدد`;}
+        else bar.classList.remove('show');
+    }
+    window.bulkActivate = async function() {
+        if(!requireAuth()||!selectedProducts.size) return;
+        if(!confirm(`تفعيل ${selectedProducts.size} منتج؟`)) return;
+        for(const id of selectedProducts){
+            await updateDoc(doc(db,"products",id),{status:'active',updatedAt:new Date().toISOString()});
+            const idx=products.findIndex(p=>p.id===id); if(idx!==-1) products[idx].status='active';
+        }
+        invalidateCache('products');
+        addActivity('toggle',`تفعيل ${selectedProducts.size} منتج دفعة`);
+        selectedProducts.clear(); applyFilters(); updateDashboardStats(); updateDonutChart();
+        showToast(`تم تفعيل المنتجات`,'success');
+    };
+    window.bulkDeactivate = async function() {
+        if(!requireAuth()||!selectedProducts.size) return;
+        if(!confirm(`إخفاء ${selectedProducts.size} منتج؟`)) return;
+        for(const id of selectedProducts){
+            await updateDoc(doc(db,"products",id),{status:'inactive',updatedAt:new Date().toISOString()});
+            const idx=products.findIndex(p=>p.id===id); if(idx!==-1) products[idx].status='inactive';
+        }
+        invalidateCache('products');
+        addActivity('toggle',`إخفاء ${selectedProducts.size} منتج دفعة`);
+        selectedProducts.clear(); applyFilters(); updateDashboardStats(); updateDonutChart();
+        showToast(`تم إخفاء المنتجات`,'success');
+    };
+    window.bulkDelete = async function() {
+        if(!requireAuth()||!selectedProducts.size) return;
+        if(!confirm(`حذف ${selectedProducts.size} منتج نهائياً؟ لا يمكن التراجع!`)) return;
+        for(const id of selectedProducts) await deleteDoc(doc(db,"products",id));
+        invalidateCache('products');
+        addActivity('delete',`حذف ${selectedProducts.size} منتج دفعة`);
+        selectedProducts.clear(); await loadProducts();
+        showToast('تم حذف المنتجات المحددة','success');
+    };
+    window.bulkMoveProducts = async function() {
+        const cat=document.getElementById('bulkMoveCategory')?.value;
+        if(!cat||!selectedProducts.size){showToast('اختر قسماً أولاً','warning');return;}
+        if(!requireAuth()) return;
+        for(const id of selectedProducts) await updateDoc(doc(db,"products",id),{category:cat,updatedAt:new Date().toISOString()});
+        invalidateCache('products');
+        addActivity('edit',`نقل ${selectedProducts.size} منتج لـ ${categories.find(c=>c.id===cat)?.name||cat}`);
+        selectedProducts.clear(); await loadProducts();
+        showToast('تم نقل المنتجات بنجاح','success');
+    };
+
+    // ✅ Duplicate product
+    window.duplicateProduct = async function(id) {
+        if(!requireAuth()) return;
+        const p=products.find(x=>x.id===id); if(!p) return;
+        try {
+            const {id:_,...data}=p;
+            await addDoc(collection(db,"products"),{...data,name:data.name+' (نسخة)',createdAt:new Date().toISOString()});
+            invalidateCache('products');
+            addActivity('add',`نسخ منتج: ${p.name}`);
+            showToast('تم نسخ المنتج بنجاح','success');
+            await loadProducts();
+        } catch(e){showToast('فشل نسخ المنتج','error');}
+    };
 
     function updateDisplay() { applyFilters(); updateRecentPreview(); }
 
     function updateProductsTable(filtered) {
         const tbody=document.getElementById('productsTableBody');
         if(!tbody) return;
-        if(!filtered.length) { tbody.innerHTML=`<tr><td colspan="9"><div class="empty-state"><i class="fas fa-search"></i><p>لا توجد نتائج</p></div></td></tr>`; return; }
+        if(!filtered.length) { tbody.innerHTML=`<tr><td colspan="10"><div class="empty-state"><i class="fas fa-search"></i><p>لا توجد نتائج</p></div></td></tr>`; return; }
         tbody.innerHTML = filtered.map(p=>{
             const cat=categories.find(c=>c.id===p.category);
-            return `<tr style="cursor:pointer" onclick="openEditProductModal('${p.id}')">
-                <td><img src="${p.image}" onerror="this.src='https://via.placeholder.com/42'"></td>
-                <td><div class="prod-name">${p.name}</div><div class="prod-desc">${p.desc?(p.desc.substring(0,38)+(p.desc.length>38?'...':'')):''}</div></td>
+            return `<tr>
+                <td onclick="event.stopPropagation()"><input type="checkbox" class="prod-checkbox" ${selectedProducts.has(p.id)?'checked':''} onchange="toggleSelectProduct('${p.id}',this.checked)" style="width:16px;height:16px;cursor:pointer;accent-color:var(--main)"></td>
+                <td style="cursor:pointer" onclick="openEditProductModal('${p.id}')"><img src="${p.image}" onerror="this.src='https://via.placeholder.com/42'"></td>
+                <td style="cursor:pointer" onclick="openEditProductModal('${p.id}')"><div class="prod-name">${p.name}</div><div class="prod-desc">${p.desc?(p.desc.substring(0,38)+(p.desc.length>38?'...':'')):''}</div></td>
                 <td><span class="cat-tag">${cat?cat.name:'---'}</span></td>
                 <td><strong style="color:var(--main)">${p.price}</strong> <small style="color:#bbb">ر.س</small></td>
                 <td style="color:#888">${p.calories||'---'}</td>
                 <td style="color:#888">${p.time||'---'}</td>
                 <td><span class="status-badge ${p.status==='active'?'status-active':'status-inactive'}"><i class="fas fa-circle" style="font-size:.45rem"></i> ${p.status==='active'?'ظاهر':'مخفي'}</span></td>
                 <td onclick="event.stopPropagation()"><label class="toggle-switch"><input type="checkbox" ${p.status==='active'?'checked':''} onchange="toggleStatus('${p.id}','${p.status||'active'}')"><span class="toggle-slider"></span></label></td>
-                <td onclick="event.stopPropagation()"><div class="action-btns"><button class="action-btn action-edit" onclick="openEditProductModal('${p.id}')"><i class="fas fa-edit"></i></button><button class="action-btn action-delete" onclick="deleteProduct('${p.id}')"><i class="fas fa-trash"></i></button></div></td>
+                <td onclick="event.stopPropagation()"><div class="action-btns">
+                    <button class="action-btn action-edit" onclick="openEditProductModal('${p.id}')" title="تعديل"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn action-copy" onclick="duplicateProduct('${p.id}')" title="نسخ"><i class="fas fa-copy"></i></button>
+                    <button class="action-btn action-delete" onclick="deleteProduct('${p.id}')" title="حذف"><i class="fas fa-trash"></i></button>
+                </div></td>
             </tr>`;
         }).join('');
     }
@@ -712,12 +846,258 @@
     window.filterByStatus = (status,el)=>{ currentStatus=status; document.querySelectorAll('.status-pill').forEach(p=>p.classList.remove('active')); el.classList.add('active'); currentPage=1; applyFilters(); };
     window.searchProducts = ()=>{ currentSearch=document.getElementById('searchInput').value; currentPage=1; applyFilters(); };
 
+    // ✅ Export CSV
+    window.exportToCSV = function() {
+        if(!products.length){showToast('لا توجد منتجات للتصدير','warning');return;}
+        const headers=['الاسم','السعر','القسم','السعرات','الوقت','الحالة','التاريخ'];
+        const rows=products.map(p=>{
+            const cat=categories.find(c=>c.id===p.category)?.name||'---';
+            return [p.name,p.price,cat,p.calories||'---',p.time||'---',p.status==='active'?'ظاهر':'مخفي',p.createdAt?new Date(p.createdAt).toLocaleDateString('ar'):'---'];
+        });
+        const csv='\uFEFF'+[headers,...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+        const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+        const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+        a.download=`products_${new Date().toISOString().split('T')[0]}.csv`; a.click(); URL.revokeObjectURL(a.href);
+        addActivity('edit','تصدير المنتجات إلى CSV');
+        showToast(`تم تصدير ${products.length} منتج`,'success');
+    };
+
+    // ✅ Import CSV
+    window.handleCSVImport = async function(file) {
+        if(!file||!file.name.endsWith('.csv')){showToast('الرجاء رفع ملف CSV فقط','error');return;}
+        if(!requireAuth()) return;
+        const text = await file.text();
+        const lines = text.split('\n').filter(Boolean);
+        if(lines.length<2){showToast('الملف فارغ أو غير صحيح','error');return;}
+        const progress=document.getElementById('importProgress');
+        const bar=document.getElementById('importProgressBar');
+        const ptext=document.getElementById('importProgressText');
+        if(progress) progress.style.display='block';
+        let imported=0, errors=0;
+        const dataLines=lines.slice(1);
+        for(let i=0;i<dataLines.length;i++){
+            try {
+                const cols=dataLines[i].split(',').map(c=>c.trim().replace(/^"|"$/g,'').replace(/""/g,'"'));
+                if(!cols[0]) continue;
+                const catObj=categories.find(c=>c.name===cols[2]);
+                await addDoc(collection(db,"products"),{name:cols[0]||'منتج',price:cols[1]||'0',category:catObj?.id||defaultCategories[0].id,calories:cols[3]||'---',time:cols[4]||'---',status:cols[5]==='ظاهر'?'active':'inactive',desc:'مستورد من CSV',image:'https://via.placeholder.com/150',createdAt:new Date().toISOString()});
+                imported++;
+            } catch(e){errors++;}
+            if(bar) bar.style.width=`${((i+1)/dataLines.length*100)}%`;
+            if(ptext) ptext.textContent=`جاري الاستيراد... ${i+1}/${dataLines.length}`;
+        }
+        invalidateCache('products'); await loadProducts();
+        if(progress) progress.style.display='none';
+        addActivity('add',`استيراد ${imported} منتج من CSV`);
+        showToast(`تم استيراد ${imported} منتج${errors?` (${errors} خطأ)`:''}`,errors?'warning':'success');
+    };
+
+    // ✅ Working Hours
+    async function loadWorkingHours() {
+        try {
+            const snap=await getDoc(doc(db,"settings","hours"));
+            if(snap.exists()){
+                const data=snap.data();
+                Object.keys(workingHours).forEach(day=>{
+                    if(data[day]) workingHours[day]={...workingHours[day],...data[day]};
+                });
+            }
+            renderWorkingHours();
+        } catch(e){renderWorkingHours();}
+    }
+    function renderWorkingHours() {
+        const list=document.getElementById('workingHoursList');
+        if(!list) return;
+        list.innerHTML=Object.entries(workingHours).filter(([k])=>k!=='updatedAt').map(([day,h])=>`
+            <div class="hours-row" style="flex-wrap:wrap;gap:8px;padding:12px 0">
+                <div class="day-name" style="width:80px;flex-shrink:0">${day}</div>
+                <div id="hoursInputs_${day}" style="display:flex;flex-direction:column;gap:7px;flex:1;${h.closed?'opacity:.4;pointer-events:none':''}">
+                    <div style="display:flex;align-items:center;gap:7px">
+                        <span style="font-size:.72rem;color:#2e7d32;font-weight:700;width:40px">فترة١</span>
+                        <input type="time" value="${h.open||'08:00'}" id="open_${day}" onchange="updateHour('${day}','open',this.value)" style="width:110px;padding:6px 9px;border:2px solid #eef0ff;border-radius:8px;font-size:.82rem;font-family:Cairo,sans-serif;text-align:center">
+                        <span class="hours-sep">–</span>
+                        <input type="time" value="${h.close||'14:00'}" id="close_${day}" onchange="updateHour('${day}','close',this.value)" style="width:110px;padding:6px 9px;border:2px solid #eef0ff;border-radius:8px;font-size:.82rem;font-family:Cairo,sans-serif;text-align:center">
+                    </div>
+                    <div id="period2Wrap_${day}" style="display:${h.hasPeriod2?'flex':'none'};align-items:center;gap:7px">
+                        <span style="font-size:.72rem;color:#e65100;font-weight:700;width:40px">فترة٢</span>
+                        <input type="time" value="${h.open2||'17:00'}" id="open2_${day}" onchange="updateHour('${day}','open2',this.value)" style="width:110px;padding:6px 9px;border:2px solid #fff3e0;border-radius:8px;font-size:.82rem;font-family:Cairo,sans-serif;text-align:center">
+                        <span class="hours-sep">–</span>
+                        <input type="time" value="${h.close2||'23:00'}" id="close2_${day}" onchange="updateHour('${day}','close2',this.value)" style="width:110px;padding:6px 9px;border:2px solid #fff3e0;border-radius:8px;font-size:.82rem;font-family:Cairo,sans-serif;text-align:center">
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+                    <label style="display:flex;align-items:center;gap:5px;font-size:.75rem;color:#e65100;cursor:pointer;font-family:Cairo,sans-serif">
+                        <input type="checkbox" ${h.hasPeriod2?'checked':''} onchange="togglePeriod2('${day}',this.checked)" style="accent-color:#e65100;width:14px;height:14px"> فترتين
+                    </label>
+                    <label class="day-closed"><input type="checkbox" ${h.closed?'checked':''} onchange="toggleDayClosed('${day}',this.checked)" style="accent-color:#c62828"> مغلق</label>
+                </div>
+            </div>`).join('');
+    }
+    window.updateHour=(day,type,val)=>{if(workingHours[day])workingHours[day][type]=val;};
+    window.togglePeriod2=function(day,on){
+        if(workingHours[day]) workingHours[day].hasPeriod2=on;
+        const wrap=document.getElementById('period2Wrap_'+day);
+        if(wrap) wrap.style.display=on?'flex':'none';
+    };
+    window.toggleDayClosed=function(day,closed){
+        if(workingHours[day])workingHours[day].closed=closed;
+        const inputs=document.getElementById('hoursInputs_'+day);
+        if(inputs) inputs.style=`display:flex;flex-direction:column;gap:7px;flex:1;${closed?'opacity:.4;pointer-events:none':''}`;
+    };
+    window.saveWorkingHours=async function(){
+        if(!requireAuth()) return;
+        const btn=document.getElementById('saveHoursBtn');
+        if(btn){btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';}
+        try {
+            // Save with Saudi Arabia timezone note (times are stored as entered, SAT +3)
+            const saveData={...workingHours, updatedAt:new Date().toISOString(), timezone:'Asia/Riyadh'};
+            await setDoc(doc(db,"settings","hours"),saveData);
+            addActivity('edit','تحديث أوقات الدوام');
+            showToast('تم حفظ أوقات الدوام بنجاح (توقيت السعودية)','success');
+        } catch(e){showToast('فشل حفظ أوقات الدوام','error');}
+        finally{if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> حفظ أوقات الدوام';}}
+    };
+
+    // ✅ Multi-Banner Slider
+    let promoBanners = [];
+
+    async function loadPromoBanner(){
+        try {
+            const snap=await getDoc(doc(db,"settings","banner"));
+            if(snap.exists()){
+                const d=snap.data();
+                if(Array.isArray(d.banners)) promoBanners=d.banners;
+                else if(d.title||d.sub||d.image) promoBanners=[{title:d.title||'',sub:d.sub||'',image:d.image||'',active:d.active!==false}];
+                renderBannersList();
+                renderBannerPreview();
+            }
+        } catch(e){}
+    }
+
+    function renderBannersList(){
+        const list=document.getElementById('bannersList');
+        if(!list) return;
+        if(!promoBanners.length){list.innerHTML='<div class="empty-state" style="padding:16px"><i class="fas fa-bullhorn"></i><p>لا توجد بانرات بعد</p></div>';return;}
+        list.innerHTML=promoBanners.map((b,i)=>`
+            <div class="banner-item ${b.active===false?'banner-inactive':''} ${b.image?'banner-item-has-img':''}">
+                ${b.image?`<img class="banner-img-thumb" src="${b.image}" onerror="this.style.display='none'" alt="">`:``}
+                <div class="banner-item-preview">
+                    <div class="banner-item-title">${b.image&&!b.title?'📷 بانر صورة':b.title||'(بدون عنوان)'}</div>
+                    ${b.sub?`<div class="banner-item-sub">${b.sub}</div>`:''}
+                </div>
+                <div class="banner-item-actions">
+                    <label class="toggle-switch"><input type="checkbox" ${b.active!==false?'checked':''} onchange="toggleBannerActive(${i},this.checked)"><span class="toggle-slider"></span></label>
+                    <button class="action-btn action-edit" onclick="editBanner(${i})" title="تعديل"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn action-delete" onclick="deleteBanner(${i})" title="حذف"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>`).join('');
+    }
+
+    let _bannerPreviewTimer=null;
+    function renderBannerPreview(){
+        const prev=document.getElementById('bannerPreview');
+        if(!prev) return;
+        clearInterval(_bannerPreviewTimer);
+        const active=promoBanners.filter(b=>b.active!==false);
+        if(!active.length){prev.innerHTML='<div class="bp-title" style="opacity:.4">لا توجد بانرات ظاهرة</div>';return;}
+        let idx=0;
+        const show=()=>{
+            const b=active[idx];
+            if(b.image){
+                prev.innerHTML=`<img class="bp-img" src="${b.image}" onerror="this.style.display='none'">${b.title||b.sub?`<div class="bp-text-wrap">${b.title?`<div class="bp-title">${b.title}</div>`:''}${b.sub?`<div class="bp-sub">${b.sub}</div>`:''}</div>`:''}${active.length>1?`<div class="banner-counter" style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%)">${idx+1} / ${active.length}</div>`:''}`;
+            } else {
+                prev.innerHTML=`<div class="bp-text-wrap">${b.title?`<div class="bp-title">${b.title}</div>`:''}${b.sub?`<div class="bp-sub">${b.sub}</div>`:''}${active.length>1?`<div class="banner-counter">${idx+1} / ${active.length}</div>`:''}</div>`;
+            }
+        };
+        show();
+        if(active.length>1) _bannerPreviewTimer=setInterval(()=>{idx=(idx+1)%active.length;show();},2200);
+    }
+
+    window.toggleBannerActive=function(i,v){if(promoBanners[i])promoBanners[i].active=v;renderBannersList();renderBannerPreview();};
+    window.editBanner=function(i){
+        const b=promoBanners[i]; if(!b) return;
+        const $=id=>document.getElementById(id);
+        $('bannerEditIndex').value=i;
+        $('bannerTitle').value=b.title||'';
+        $('bannerSub').value=b.sub||'';
+        $('bannerActive').checked=b.active!==false;
+        // If image is base64 data URI → show in file mode, else URL mode
+        if(b.image && b.image.startsWith('data:')){
+            switchBannerImgMode('file');
+            $('bannerImageData').value=b.image;
+        } else {
+            switchBannerImgMode('url');
+            $('bannerImage').value=b.image||'';
+        }
+        if(b.image){$('bannerImgPreview').src=b.image;$('bannerImgPreviewWrap').style.display='block';}
+        else $('bannerImgPreviewWrap').style.display='none';
+        $('addBannerBtn').innerHTML='<i class="fas fa-check"></i> تحديث البانر';
+        $('bannerTitle').scrollIntoView({behavior:'smooth',block:'center'});
+        $('bannerTitle').focus();
+    };
+    window.deleteBanner=function(i){
+        if(!confirm('حذف هذا البانر؟')) return;
+        promoBanners.splice(i,1); renderBannersList(); renderBannerPreview();
+    };
+    window.switchBannerImgMode=function(mode){
+        const $=id=>document.getElementById(id);
+        if(mode==='url'){
+            $('bannerUrlGroup').style.display='block';
+            $('bannerFileGroup').style.display='none';
+            $('bannerUrlBtn').classList.add('active');
+            $('bannerFileBtn').classList.remove('active');
+            $('bannerImageData').value='';
+        } else {
+            $('bannerUrlGroup').style.display='none';
+            $('bannerFileGroup').style.display='block';
+            $('bannerFileBtn').classList.add('active');
+            $('bannerUrlBtn').classList.remove('active');
+            $('bannerImage').value='';
+        }
+        $('bannerImgPreviewWrap').style.display='none';
+    };
+    window.addOrUpdateBanner=function(){
+        const $=id=>document.getElementById(id);
+        const title=$('bannerTitle').value.trim();
+        const sub=$('bannerSub').value.trim();
+        // Get image: URL or base64 from file
+        const imageFromUrl=$('bannerImage').value.trim();
+        const imageFromFile=$('bannerImageData').value.trim();
+        const image=imageFromFile||imageFromUrl;
+        const active=$('bannerActive').checked;
+        if(!title&&!sub&&!image){showToast('أدخل صورة أو عنواناً على الأقل','warning');return;}
+        const idx=$('bannerEditIndex').value;
+        const bannerObj={title,sub,image,active};
+        if(idx!=='') promoBanners[parseInt(idx)]=bannerObj;
+        else promoBanners.push(bannerObj);
+        // Reset form
+        $('bannerTitle').value=''; $('bannerSub').value='';
+        $('bannerImage').value=''; $('bannerImageData').value='';
+        $('bannerEditIndex').value=''; $('bannerActive').checked=true;
+        $('bannerImgPreviewWrap').style.display='none';
+        $('bannerFileInput').value='';
+        switchBannerImgMode('url');
+        $('addBannerBtn').innerHTML='<i class="fas fa-plus"></i> إضافة بانر';
+        renderBannersList(); renderBannerPreview();
+    };
+    window.savePromoBanner=async function(){
+        if(!requireAuth()) return;
+        const btn=document.getElementById('saveBannersBtn');
+        if(btn){btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';}
+        try {
+            await setDoc(doc(db,"settings","banner"),{banners:promoBanners,updatedAt:new Date().toISOString()});
+            addActivity('edit',`حفظ ${promoBanners.length} بانر ترويجي`);
+            showToast(`تم حفظ ${promoBanners.length} بانر بنجاح`,'success');
+        } catch(e){showToast('فشل حفظ البانرات','error');}
+        finally{if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> حفظ البانرات';}}
+    };
+
     window.switchTab = function(tabId,btn) {
         document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
         document.getElementById(tabId)?.classList.add('active');
         document.querySelectorAll('.menu-item').forEach(i=>i.classList.remove('active'));
         btn.classList.add('active');
-        const titles = {'dashboard-tab':'لوحة المعلومات','offers-tab':'إدارة العروض','add-product-tab':'إضافة منتج','products-tab':'المنتجات','categories-tab':'الأقسام','settings-tab':'الإعدادات'};
+        const titles = {'dashboard-tab':'لوحة المعلومات','offers-tab':'إدارة العروض','add-product-tab':'إضافة منتج','products-tab':'المنتجات','categories-tab':'الأقسام','settings-tab':'الإعدادات','tools-tab':'الأدوات'};
         const pt=document.getElementById('pageTitle');
         if(pt) pt.textContent=titles[tabId]||'لوحة التحكم';
         if(tabId==='products-tab') { currentPage=1; applyFilters(); }
@@ -736,9 +1116,17 @@
         setupImgHandlers('urlOptionBtn','fileOptionBtn','urlInputGroup','fileInputGroup','file-input','imagePreview','imgPreviewWrap','finalImageData');
         setupImgHandlers('editUrlOptionBtn','editFileOptionBtn','editUrlInputGroup','editFileInputGroup','editFileInput','editImagePreview','editImgPreviewWrap','editFinalImageData');
 
+        const dropZone=document.getElementById('csvDropZone');
+        if(dropZone){
+            dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover');});
+            dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover'));
+            dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover');const f=e.dataTransfer.files[0];if(f)handleCSVImport(f);});
+        }
+        document.getElementById('csvFileInput')?.addEventListener('change',e=>handleCSVImport(e.target.files[0]));
+
         document.getElementById('addProductForm')?.addEventListener('submit',async e=>{
             e.preventDefault();
-            if (!requireAuth()) return; // ✅ تحقق Auth
+            if (!requireAuth()) return;
             const $=id=>document.getElementById(id);
             const name=$('productName').value.trim(), price=$('productPrice').value.trim(), category=$('productCategory').value;
             if(!name||!price||!category){showToast('الرجاء ملء جميع الحقول الإلزامية','error');return;}
@@ -749,7 +1137,8 @@
             btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
             try {
                 await addDoc(collection(db,"products"),{name,price,image,calories:$('productCalories').value.trim()||'---',time:$('productTime').value.trim()||'---',category,desc:$('productDesc').value.trim()||'وصف غير متوفر',status,createdAt:new Date().toISOString()});
-                invalidateCache('products'); // ✅ مسح الكاش
+                invalidateCache('products');
+                addActivity('add',`إضافة منتج: ${name}`);
                 showToast('تم حفظ المنتج بنجاح','success');
                 e.target.reset();
                 $('urlInputGroup').style.display='block'; $('fileInputGroup').style.display='none'; $('imgPreviewWrap').style.display='none'; $('finalImageData').value='';
@@ -771,60 +1160,77 @@
             btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري التحديث...';
             const res=await updateProduct(id,{name,price,image,calories:$('editProductCalories').value.trim()||'---',time:$('editProductTime').value.trim()||'---',category,desc:$('editProductDesc').value.trim()||'وصف غير متوفر',status,updatedAt:new Date().toISOString()});
             btn.disabled=false; btn.innerHTML='<i class="fas fa-pen"></i> تحديث المنتج';
-            if(res.success){showToast('تم تحديث المنتج بنجاح','success');closeModal('editProductModal');await loadProducts();}
+            if(res.success){addActivity('edit',`تعديل منتج: ${name}`);showToast('تم تحديث المنتج بنجاح','success');closeModal('editProductModal');await loadProducts();}
             else showToast('فشل التحديث: '+res.error,'error');
         });
 
         document.getElementById('addCategoryForm')?.addEventListener('submit',async e=>{
             e.preventDefault();
-            if (!requireAuth()) return; // ✅ تحقق Auth
+            if (!requireAuth()) return;
             const $=id=>document.getElementById(id);
             const name=$('categoryName').value.trim();
             if(!name){showToast('الرجاء إدخال اسم القسم','error');return;}
             try {
                 await addDoc(collection(db,"categories"),{name,nameEn:$('categoryNameEn').value.trim()||name,order:parseInt($('categoryOrder').value)||0,createdAt:new Date().toISOString()});
-                invalidateCache('categories'); // ✅ مسح الكاش
+                invalidateCache('categories');
+                addActivity('add',`إضافة قسم: ${name}`);
                 showToast('تم إضافة القسم بنجاح','success');
-                e.target.reset();
-                await loadCategories();
+                e.target.reset(); await loadCategories();
             } catch(err){showToast('فشل الإضافة: '+err.message,'error');}
         });
 
         document.getElementById('editCategoryForm')?.addEventListener('submit',async e=>{
             e.preventDefault();
-            if (!requireAuth()) return; // ✅ تحقق Auth
+            if (!requireAuth()) return;
             const $=id=>document.getElementById(id);
             const id=$('editCategoryId').value, name=$('editCategoryName').value.trim();
             if(!name){showToast('الرجاء إدخال اسم القسم','error');return;}
             try {
                 await updateDoc(doc(db,"categories",id),{name,nameEn:$('editCategoryNameEn').value.trim()||name,order:parseInt($('editCategoryOrder').value)||0,updatedAt:new Date().toISOString()});
-                invalidateCache('categories'); // ✅ مسح الكاش
+                invalidateCache('categories');
+                addActivity('edit',`تعديل قسم: ${name}`);
                 showToast('تم تحديث القسم بنجاح','success');
-                closeModal('editCategoryModal');
-                await loadCategories();
+                closeModal('editCategoryModal'); await loadCategories();
             } catch(err){showToast('فشل التحديث: '+err.message,'error');}
         });
 
         document.getElementById('saveOfferBtn')?.addEventListener('click',saveOfferSettings);
         document.getElementById('addFeaturedProductBtn')?.addEventListener('click',addFeaturedProduct);
         document.getElementById('saveSocialBtn')?.addEventListener('click',saveSocialSettings);
+        document.getElementById('addBannerBtn')?.addEventListener('click',addOrUpdateBanner);
+        document.getElementById('saveBannersBtn')?.addEventListener('click',savePromoBanner);
+        document.getElementById('bannerImage')?.addEventListener('input',function(){
+            const v=this.value.trim();
+            const wrap=document.getElementById('bannerImgPreviewWrap');
+            const img=document.getElementById('bannerImgPreview');
+            if(v){img.src=v;wrap.style.display='block';}
+            else wrap.style.display='none';
+        });
+        document.getElementById('bannerFileInput')?.addEventListener('change',function(e){
+            const f=e.target.files[0]; if(!f) return;
+            if(f.size>2*1024*1024){showToast('حجم الصورة يتجاوز 2 ميجابايت','error');return;}
+            const r=new FileReader();
+            r.onload=ev=>{
+                const data=ev.target.result;
+                document.getElementById('bannerImageData').value=data;
+                document.getElementById('bannerImgPreview').src=data;
+                document.getElementById('bannerImgPreviewWrap').style.display='block';
+            };
+            r.readAsDataURL(f);
+        });
 
         document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.style.display='none'; }));
+        renderActivityLog();
     });
 
     window.logout = ()=>{
-        import("https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js").then(({getAuth, signOut})=>{
-            signOut(getAuth());
-        });
-        localStorage.clear(); sessionStorage.clear();
-        window.location.href='login.html';
+        import("https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js").then(({getAuth, signOut})=>{ signOut(getAuth()); });
+        localStorage.clear(); sessionStorage.clear(); window.location.href='login.html';
     };
 
-    // ✅ تحميل موازي لتسريع الصفحة
-    Promise.all([loadCategories(), loadOfferSettings(), loadSocialSettings(), loadVisitorsData()])
+    Promise.all([loadCategories(), loadOfferSettings(), loadSocialSettings(), loadVisitorsData(), loadWorkingHours(), loadPromoBanner()])
         .then(() => loadProducts());
 </script>
-```
 
 </head>
 <body>
@@ -846,6 +1252,7 @@
         <div class="menu-item" onclick="switchTab('categories-tab',this)"><i class="fas fa-layer-group"></i><span>الأقسام</span></div>
         <span class="sidebar-section">النظام</span>
         <div class="menu-item" onclick="switchTab('settings-tab',this)"><i class="fas fa-cog"></i><span>الإعدادات</span></div>
+        <div class="menu-item" onclick="switchTab('tools-tab',this)"><i class="fas fa-tools"></i><span>الأدوات</span></div>
     </div>
     <div class="sidebar-footer"><div class="logout-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>تسجيل الخروج</span></div></div>
 </div>
@@ -854,20 +1261,17 @@
 
 <div class="main-content">
 
-```
 <div class="top-bar">
     <div><div class="page-title" id="pageTitle">لوحة المعلومات</div><div class="breadcrumb">مرحباً في <span>لوحة التحكم</span></div></div>
     <div class="admin-info">
-        <!-- ✅ شارة حالة المصادقة -->
-        <div class="auth-status auth-fail" id="authStatusBadge">
-            <i class="fas fa-spinner fa-spin"></i> جاري التحقق...
-        </div>
+        <div class="auth-status auth-fail" id="authStatusBadge"><i class="fas fa-spinner fa-spin"></i> جاري التحقق...</div>
         <div class="session-timer" id="sessionTimer"><i class="fas fa-clock"></i><span id="timerDisplay">30:00</span></div>
         <div class="admin-avatar-wrap"><div class="admin-avatar">م</div><div><div class="admin-name">المدير</div><div class="admin-role">مشرف النظام</div></div></div>
     </div>
 </div>
 
-<!-- DASHBOARD -->
+<!-- DASHBOARD TAB -->
+
 <div id="dashboard-tab" class="tab-content active">
     <div class="dashboard-stats">
         <div class="dashboard-card"><div class="card-icon"><i class="fas fa-users"></i></div><div class="card-info"><div class="card-label">إجمالي الزوار</div><div class="card-number" id="totalVisitors">—</div><div id="visitorsTrend" class="trend trend-up"><i class="fas fa-arrow-up"></i> 0%</div></div></div>
@@ -879,10 +1283,15 @@
         <div class="chart-box"><div class="section-header"><div class="section-title"><i class="fas fa-chart-area"></i> حركة الزوار – آخر 7 أيام</div></div><canvas id="visitorsChart" style="height:255px"></canvas></div>
         <div class="chart-box"><div class="section-header"><div class="section-title"><i class="fas fa-circle-notch"></i> حالة المنتجات</div></div><canvas id="donutChart" style="height:255px"></canvas></div>
     </div>
-    <div class="chart-box"><div class="section-header"><div class="section-title"><i class="fas fa-fire"></i> المنتجات الأكثر مشاهدة</div></div><div class="top-products-list" id="topProductsList"><div class="empty-state"><i class="fas fa-chart-bar"></i><p>جاري التحميل...</p></div></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:22px">
+        <div class="chart-box"><div class="section-header"><div class="section-title"><i class="fas fa-fire"></i> المنتجات الأكثر مشاهدة</div></div><div class="top-products-list" id="topProductsList"><div class="empty-state"><i class="fas fa-chart-bar"></i><p>جاري التحميل...</p></div></div></div>
+        <!-- ✅ NEW: Activity Log -->
+        <div class="chart-box"><div class="section-header"><div class="section-title"><i class="fas fa-history"></i> سجل النشاطات</div></div><div id="activityLogList"><div class="empty-state"><i class="fas fa-history"></i><p>لا توجد أنشطة بعد</p></div></div></div>
+    </div>
 </div>
 
-<!-- OFFERS -->
+<!-- OFFERS TAB -->
+
 <div id="offers-tab" class="tab-content">
     <div class="content-card">
         <div class="section-header"><div class="section-title"><i class="fas fa-star"></i> التحكم في العروض الرئيسية</div></div>
@@ -914,9 +1323,57 @@
         </div>
         <button class="btn btn-primary" id="saveOfferBtn" style="width:100%"><i class="fas fa-save"></i> حفظ جميع التغييرات</button>
     </div>
+    <!-- ✅ Multi-Banner Slider -->
+    <div class="content-card">
+        <div class="section-header">
+            <div class="section-title"><i class="fas fa-images"></i> بانرات الترويج (سلايدر)</div>
+            <span style="font-size:.75rem;color:#aaa">تظهر فوق السلايدر الرئيسي في صفحة المنيو</span>
+        </div>
+        <!-- Live Preview -->
+        <div id="bannerPreview" class="banner-preview" style="min-height:85px;cursor:default">
+            <div class="bp-title" style="opacity:.4">معاينة البانرات</div>
+        </div>
+        <!-- Banner List -->
+        <div class="banner-list" id="bannersList"></div>
+        <!-- Add/Edit Form -->
+        <div class="banner-add-form">
+            <h4 style="color:var(--main);font-size:.88rem;margin-bottom:11px"><i class="fas fa-plus" style="margin-left:5px"></i>إضافة / تعديل بانر</h4>
+            <input type="hidden" id="bannerEditIndex" value="">
+            <div class="form-group">
+                <label>صورة البانر <span style="font-size:.75rem;color:#aaa">(اختياري)</span></label>
+                <div class="img-type-btns">
+                    <button type="button" id="bannerUrlBtn" class="img-type-btn active" onclick="switchBannerImgMode('url')"><i class="fas fa-link"></i> رابط URL</button>
+                    <button type="button" id="bannerFileBtn" class="img-type-btn" onclick="switchBannerImgMode('file')"><i class="fas fa-upload"></i> رفع صورة</button>
+                </div>
+                <div id="bannerUrlGroup">
+                    <input type="url" id="bannerImage" class="form-control" placeholder="https://example.com/banner.jpg">
+                </div>
+                <div id="bannerFileGroup" style="display:none">
+                    <div class="file-upload-area" onclick="document.getElementById('bannerFileInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>اضغط لاختيار صورة</p>
+                        <small>JPG, PNG – حد أقصى 2 ميجابايت</small>
+                    </div>
+                    <input type="file" id="bannerFileInput" accept="image/*" style="display:none">
+                </div>
+                <input type="hidden" id="bannerImageData">
+            </div>
+            <div id="bannerImgPreviewWrap" style="display:none;margin-bottom:10px"><img id="bannerImgPreview" style="max-height:90px;border-radius:10px;border:3px solid var(--secondary);object-fit:cover;max-width:200px"></div>
+            <div class="form-grid">
+                <div class="form-group"><label>العنوان الرئيسي</label><input type="text" id="bannerTitle" class="form-control" placeholder="خصم 20% اليوم فقط! 🎉"></div>
+                <div class="form-group"><label>النص الفرعي</label><input type="text" id="bannerSub" class="form-control" placeholder="لفترة محدودة..."></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+                <div class="offers-toggle-bar" style="margin:0;flex:1"><label><label class="toggle-switch"><input type="checkbox" id="bannerActive" checked><span class="toggle-slider"></span></label> إظهار هذا البانر</label></div>
+                <button class="btn btn-secondary btn-sm" id="addBannerBtn"><i class="fas fa-plus"></i> إضافة بانر</button>
+            </div>
+        </div>
+        <button class="btn btn-primary" id="saveBannersBtn" style="width:100%"><i class="fas fa-save"></i> حفظ البانرات</button>
+    </div>
 </div>
 
-<!-- ADD PRODUCT -->
+<!-- ADD PRODUCT TAB -->
+
 <div id="add-product-tab" class="tab-content">
     <div class="stats-grid-2">
         <div class="stat-card-sm"><div class="stat-icon-sm"><i class="fas fa-utensils"></i></div><div><div class="stat-label-sm">إجمالي المنتجات</div><div class="stat-value-sm" id="totalProducts">0</div></div></div>
@@ -948,27 +1405,48 @@
     <div class="content-card"><div class="section-header"><div class="section-title"><i class="fas fa-clock"></i> آخر المنتجات المضافة</div></div><div id="recentProductsPreview"></div></div>
 </div>
 
-<!-- PRODUCTS -->
+<!-- PRODUCTS TAB -->
+
 <div id="products-tab" class="tab-content">
     <div class="content-card">
-        <div class="section-header"><div class="section-title"><i class="fas fa-boxes"></i> جميع المنتجات</div><span id="filteredCount" class="filter-count">0 منتج</span></div>
+        <div class="section-header">
+            <div class="section-title"><i class="fas fa-boxes"></i> جميع المنتجات</div>
+            <div style="display:flex;gap:8px;align-items:center">
+                <span id="filteredCount" class="filter-count">0 منتج</span>
+                <button class="btn btn-ghost btn-sm" onclick="exportToCSV()"><i class="fas fa-download"></i> تصدير CSV</button>
+            </div>
+        </div>
         <div class="filter-bar">
             <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="بحث عن منتج بالاسم أو الوصف..." onkeyup="searchProducts()"></div>
             <div class="filter-select-wrap"><i class="fas fa-chevron-down"></i><select id="filterCategory" class="filter-select" onchange="filterProducts()"><option value="all">جميع الأقسام</option></select></div>
             <div class="status-pills"><button class="status-pill active" onclick="filterByStatus('all',this)">الكل</button><button class="status-pill" onclick="filterByStatus('active',this)">ظاهر</button><button class="status-pill" onclick="filterByStatus('inactive',this)">مخفي</button></div>
         </div>
+        <!-- ✅ NEW: Bulk actions -->
+        <div class="bulk-bar" id="bulkBar">
+            <span class="bulk-count" id="bulkSelectedCount">0 منتج محدد</span>
+            <div class="bulk-actions">
+                <button class="btn btn-sm" style="background:#e8f5e9;color:#2e7d32" onclick="bulkActivate()"><i class="fas fa-eye"></i> تفعيل</button>
+                <button class="btn btn-ghost btn-sm" onclick="bulkDeactivate()"><i class="fas fa-eye-slash"></i> إخفاء</button>
+                <div class="filter-select-wrap"><i class="fas fa-chevron-down"></i><select id="bulkMoveCategory" class="filter-select" style="min-width:130px"><option value="">-- نقل لقسم --</option></select></div>
+                <button class="btn btn-ghost btn-sm" onclick="bulkMoveProducts()"><i class="fas fa-arrows-alt"></i> نقل</button>
+                <button class="btn btn-sm" style="background:#ffebee;color:#c62828" onclick="bulkDelete()"><i class="fas fa-trash"></i> حذف</button>
+            </div>
+        </div>
         <div class="table-wrapper">
             <table class="products-table">
-                <thead><tr><th>الصورة</th><th>المنتج</th><th>القسم</th><th>السعر</th><th>السعرات</th><th>الوقت</th><th>الحالة</th><th>تفعيل</th><th>إجراءات</th></tr></thead>
+                <thead><tr>
+                    <th><input type="checkbox" onchange="selectAllProducts(this.checked)" style="width:16px;height:16px;cursor:pointer;accent-color:var(--main)" title="تحديد الكل"></th>
+                    <th>الصورة</th><th>المنتج</th><th>القسم</th><th>السعر</th><th>السعرات</th><th>الوقت</th><th>الحالة</th><th>تفعيل</th><th>إجراءات</th>
+                </tr></thead>
                 <tbody id="productsTableBody"></tbody>
             </table>
         </div>
-        <!-- ✅ شريط Pagination -->
         <div id="paginationBar" class="pagination-bar"></div>
     </div>
 </div>
 
-<!-- CATEGORIES -->
+<!-- CATEGORIES TAB -->
+
 <div id="categories-tab" class="tab-content">
     <div class="content-card">
         <div class="section-header"><div class="section-title"><i class="fas fa-plus-circle"></i> إضافة قسم جديد</div></div>
@@ -987,7 +1465,8 @@
     </div>
 </div>
 
-<!-- SETTINGS -->
+<!-- SETTINGS TAB -->
+
 <div id="settings-tab" class="tab-content">
     <div class="content-card">
         <div class="section-header"><div class="section-title"><i class="fas fa-store"></i> إعدادات المتجر</div></div>
@@ -1010,10 +1489,73 @@
             <button class="btn btn-primary" id="saveSocialBtn"><i class="fas fa-save"></i> حفظ روابط التواصل</button>
         </div>
     </div>
+    <!-- ✅ NEW: Working Hours -->
+    <div class="content-card">
+        <div class="section-header"><div class="section-title"><i class="fas fa-clock"></i> أوقات الدوام</div></div>
+        <div id="workingHoursList"></div>
+        <button class="btn btn-primary" id="saveHoursBtn" onclick="saveWorkingHours()" style="margin-top:14px"><i class="fas fa-save"></i> حفظ أوقات الدوام</button>
+    </div>
 </div>
-```
 
+<!-- ✅ NEW: TOOLS TAB -->
+
+<div id="tools-tab" class="tab-content">
+    <div class="content-card">
+        <div class="section-header"><div class="section-title"><i class="fas fa-file-csv"></i> استيراد وتصدير المنتجات</div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="section-box">
+                <h3>📤 تصدير المنتجات</h3>
+                <p style="font-size:.83rem;color:#888;margin-bottom:14px">تصدير جميع المنتجات إلى ملف CSV يمكن فتحه في Excel.</p>
+                <button class="btn btn-primary" onclick="exportToCSV()"><i class="fas fa-download"></i> تصدير CSV</button>
+            </div>
+            <div class="section-box">
+                <h3>📥 استيراد المنتجات</h3>
+                <p style="font-size:.83rem;color:#888;margin-bottom:14px">استيراد منتجات من ملف CSV. الأعمدة: الاسم، السعر، القسم، السعرات، الوقت، الحالة.</p>
+                <div class="import-drop-zone" id="csvDropZone" onclick="document.getElementById('csvFileInput').click()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>اسحب ملف CSV هنا أو اضغط للاختيار</p>
+                    <small>بصيغة CSV فقط</small>
+                </div>
+                <input type="file" id="csvFileInput" accept=".csv" style="display:none">
+                <div class="import-progress" id="importProgress">
+                    <div class="progress-bar-wrap"><div class="progress-bar" id="importProgressBar"></div></div>
+                    <div class="progress-text" id="importProgressText">جاري الاستيراد...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-card">
+        <div class="section-header"><div class="section-title"><i class="fas fa-bolt"></i> إجراءات سريعة</div></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+            <div class="section-box quick-action-box" onclick="document.querySelectorAll('.menu-item')[3].click()">
+                <i class="fas fa-boxes" style="font-size:1.8rem;color:var(--main);margin-bottom:8px;display:block"></i>
+                <div style="font-weight:700;color:var(--main);font-size:.9rem">إدارة المنتجات</div>
+                <div style="font-size:.75rem;color:#999;margin-top:4px">عرض وتعديل الكل</div>
+            </div>
+            <div class="section-box quick-action-box" onclick="document.querySelectorAll('.menu-item')[2].click()">
+                <i class="fas fa-plus-circle" style="font-size:1.8rem;color:var(--secondary-dark);margin-bottom:8px;display:block"></i>
+                <div style="font-weight:700;color:var(--main);font-size:.9rem">إضافة منتج</div>
+                <div style="font-size:.75rem;color:#999;margin-top:4px">منتج جديد سريع</div>
+            </div>
+            <div class="section-box quick-action-box" onclick="exportToCSV()">
+                <i class="fas fa-file-export" style="font-size:1.8rem;color:#2e7d32;margin-bottom:8px;display:block"></i>
+                <div style="font-weight:700;color:var(--main);font-size:.9rem">تصدير البيانات</div>
+                <div style="font-size:.75rem;color:#999;margin-top:4px">نسخة احتياطية CSV</div>
+            </div>
+        </div>
+    </div>
+    <div class="content-card">
+        <div class="section-header"><div class="section-title"><i class="fas fa-info-circle"></i> معلومات النظام</div></div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+            <div class="backup-status backup-ok"><i class="fas fa-database"></i> Firebase متصل بنجاح</div>
+            <div class="backup-status backup-ok"><i class="fas fa-shield-halved"></i> الأمان: مشفر SSL</div>
+            <div class="backup-status backup-warn"><i class="fas fa-clock"></i> آخر مزامنة: للتو</div>
+            <div class="backup-status backup-ok"><i class="fas fa-mobile-alt"></i> متوافق مع الجوال</div>
+        </div>
+    </div>
 </div>
+
+</div><!-- end main-content -->
 
 <!-- EDIT PRODUCT MODAL -->
 
